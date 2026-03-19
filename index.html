@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.000, maximum-scale=1.000, user-scalable=no, shrink-to-fit=no">
-<meta charset="utf-8">
-<title>Brawl Stars Статистика</title>
-<style>
-    @font-face {
+    <meta name="viewport" content="width=device-width, initial-scale=1.000, maximum-scale=1.000, user-scalable=no, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <title>Brawl Stars Статистика</title>
+    <style>
+        @font-face {
             font-family: '2';
             src: url('https://forumstatic.ru/files/001a/a3/94/73088.ttf?v=1');
         }
@@ -16,9 +16,26 @@
             padding: 10px;
             font-size: 16px;
         }
-</style>
+        #consoleds {
+            color: #ff6b6b;
+            margin-top: 20px;
+        }
+        .player-stats {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+    </style>
 
-Error...
+    <div class="controls">
+    </div>
+    
+    <div id="stats-container"></div><br>
+    Консоль:
+    <pre id="consoleds"></pre>
 
 <script>
 // Массив тегов игроков
@@ -53,6 +70,7 @@ async function loadStats(playerTag) {
         const homs = await response.json();
         
         // Теперь можно использовать homs как обычную переменную
+        consoleds.innerHTML += (`Полученные данные: ${homs}<br>`);
         console.log('Полученные данные:', homs);
         homer = homs
         
@@ -60,10 +78,14 @@ async function loadStats(playerTag) {
         return homs;
         
     } catch (error) {
+        consoleds.innerHTML += `Ошибка для тега ${playerTag}: ${error.message}<br>`;
         console.error(`Ошибка для тега ${playerTag}:`, error);
         return null;
     }
 }
+
+// Запускаем загрузку статистики
+loadStats('29G9UY820');
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
