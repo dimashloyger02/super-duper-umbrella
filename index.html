@@ -20,6 +20,12 @@
             color: #ffffff;
             margin-top: 20px;
         }
+        #red{
+            color: #ff0000;
+        }
+        #green{
+            color: #00ff00;
+        }
         .player-stats {
             margin: 15px 0;
             padding: 10px;
@@ -70,7 +76,7 @@ async function loadStats(playerTag) {
         const homs = await response.json();
         
         // Теперь можно использовать homs как обычную переменную
-        consoleds.innerHTML += (`Полученные данные: ${homs}<br>`);
+        consoleds.innerHTML += (`<span id="green">Полученные данные: ${homs}</span><br>`);
         console.log('Полученные данные:', homs);
         homer = homs
         
@@ -78,7 +84,7 @@ async function loadStats(playerTag) {
         return homs;
         
     } catch (error) {
-        consoleds.innerHTML += `Ошибка для тега ${playerTag}: ${error.message}<br>`;
+        consoleds.innerHTML += `<span id="red">Ошибка для тега ${playerTag}: ${error.message}</span><br>`;
         console.error(`Ошибка для тега ${playerTag}:`, error);
         return null;
     }
