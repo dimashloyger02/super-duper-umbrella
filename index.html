@@ -5,94 +5,106 @@
     <meta charset="utf-8">
     <title>Brawl Stars Статистика</title>
     <style>
-        @font-face {
-            font-family: '2';
-            src: url('https://forumstatic.ru/files/001a/a3/94/73088.ttf?v=1');
-        }
-        body {
+    body {
             background: #000;
             color: #fff;
             font-family: '2';
             padding: 10px;
             font-size: 16px;
         }
+        /* Стили для JSON-форматирования */
         #consoleds {
             color: #ffffff;
             margin-top: 20px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-family: monospace;
+            padding: 10px;
+            background: rgba(0,0,0,0.8);
         }
-        #red{
+        #red {
             color: #ff0000;
         }
-        #green{
+
+        #green {
             color: #00ff00;
         }
+
         .player-stats {
             margin: 15px 0;
             padding: 10px;
             background: rgba(255, 255, 255, 0.1);
         }
-        .controls {
-            margin-bottom: 20px;
-        }
     </style>
-
-    <div class="controls">
-    </div>
-    
-    <div id="stats-container"></div><br>
+</head>
+<body>
+    <h1>Статистика Brawl Stars</h1>
+    <div id="stats-container"></div>
+    <br>
     Консоль:
     <pre id="consoleds"></pre>
 
-<script>
-// Массив тегов игроков
-const players = [
-    '29G9UY820',    // Дима
-    'YQ9G0QGUP',    // Dexs23
-    'Q9C8C9YLY',    // Дмитрий
-    'YCYGVYJY9',    // 1 ЛАЙК=1 КУБОК
-    'QJPR99GV2',    // Путь Славы
-    'GJPYY0PLG',    // Любимый
-    'GCRUP2QRL',    // Ютубер :)
-    'RPVQ22QGU',    // Дима 2
-    'URVG2RPVP',    // Путь 100 призов
-    '298GJRG29R',    // Gemstone
-    '80RCCGQL',    // holdik
-    '2UCYLOYPQJ',    // Спринтер Финкс
-    'ULQY2U8U'    // YT|BEZSMERTNY
-];
-
-homer = null
-
-// Функция для получения статистики игрока
-async function loadStats(playerTag) {
-    try {
-        const response = await fetch(`http://192.168.1.65:5000/api/player/${playerTag}`);
-        
-        if (!response.ok) {
-            throw new Error(`Ошибка: ${response.status}`);
+    <script>
+        // Функция для форматирования JSON
+        function formatJSON(obj) {
+            return JSON.stringify(obj, null, 0)
+                .split('\n').join('<br>')
+                .split(' ').join('&nbsp;');
         }
-        
-        // Сохраняем результат в переменную
-        const homs = await response.json();
-        
-        // Теперь можно использовать homs как обычную переменную
-        consoleds.innerHTML += (`<span id="green">Полученные данные: ${homs}</span><br>`);
-        console.log('Полученные данные:', homs);
-        homer = homs
-        
-        // Возвращаем данные
-        return homs;
-        
-    } catch (error) {
-        consoleds.innerHTML += `<span id="red">Ошибка для тега ${playerTag}: ${error.message}</span><br>`;
-        console.error(`Ошибка для тега ${playerTag}:`, error);
-        return null;
-    }
-}
 
-// Запускаем загрузку статистики
-loadStats('29G9UY820');
-</script>
+        // Массив тегов игроков
+        const players = [
+            '29G9UY820',    // Дима
+            'YQ9G0QGUP',    // Dexs23
+            'Q9C8C9YLY',    // Дмитрий
+            'YCYGVYJY9',    // 1 ЛАЙК=1 КУБОК
+            'QJPR99GV2',    // Путь Славы
+            'GJPYY0PLG',    // Любимый
+            'GCRUP2QRL',    // Ютубер :)
+            'RPVQ22QGU',    // Дима 2
+            'URVG2RPVP',    // Путь 100 призов
+            '298GJRG29R',    // Gemstone
+            '80RCCGQL',    // holdik
+            '2UCYLOYPQJ',    // Спринтер Финкс
+            'ULQY2U8U'    // YT|BEZSMERTNY
+        ];
 
-<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>eruda.init();</script>
+        // Функция для получения статистики игрока
+        async function loadStats(playerTag) {
+            try {
+                const response = await fetch(`http://192.168.1.65:5000/api/player/${playerTag}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Ошибка: ${response.status}`);
+                }
+                
+                const homs = await response.json();
+                
+                // Форматируем JSON для вывода
+                const formattedData = formatJSON(homs);
+                
+                // Обновляем содержимое консоли
+                document.getElementById('consoleds').innerHTML = 
+                    `<span id="green">Полученные данные:</span><br>${formattedData}`;
+                
+                console.log('Полученные данные:', homs);
+                homer = homs;
+                
+                return homs;
+                
+            } catch (error) {
+                document.getElementById('consoleds').innerHTML = 
+                    `<span id="red">Ошибка для тега ${playerTag}: ${error.message}</span><br>`;
+                console.error(`Ошибка для тега ${playerTag}:`, error);
+                return null;
+            }
+        }
+
+        // Запускаем загрузку статистики
+        loadStats('29G9UY820');
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
+</body>
+</html>
