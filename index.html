@@ -35,14 +35,39 @@
             padding: 10px;
             background: rgba(255, 255, 255, 0.1);
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+            min-width: 80px;
+            background: #0099ff;
+            color: #000000;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <h1>Статистика Brawl Stars</h1>
     <div id="stats-container"></div>
     <br>
+    Таблица:<br>
+    <button onclick="loadData()">Загрузить данные</button>
+    <div id="result"></div>
     Консоль:
     <pre id="consoleds"></pre>
+
+    
 
     <script>
         // Функция для форматирования JSON
@@ -102,6 +127,133 @@
 
         // Запускаем загрузку статистики
         loadStats('29G9UY820');
+    </script>
+    
+    <script>
+// Массив рангов
+const RANK_SYSTEM = [
+    {"rank": "Бронза I", "elo": 0, "color": "bronza"},
+    {"rank": "Бронза II", "elo": 250, "color": "bronza"},
+    {"rank": "Бронза III", "elo": 500, "color": "bronza"},
+    {"rank": "Серебро I", "elo": 750, "color": "silver"},
+    {"rank": "Серебро II", "elo": 1000, "color": "silver"},
+    {"rank": "Серебро III", "elo": 1250, "color": "silver"},
+    {"rank": "Золото I", "elo": 1500, "color": "gold"},
+    {"rank": "Золото II", "elo": 1750, "color": "gold"},
+    {"rank": "Золото III", "elo": 2000, "color": "gold"},
+    {"rank": "Алмаз I", "elo": 2500, "color": "diamond"},
+    {"rank": "Алмаз II", "elo": 3000, "color": "diamond"},
+    {"rank": "Алмаз III", "elo": 3500, "color": "diamond"},
+    {"rank": "Мифик I", "elo": 4000, "color": "mythic"},
+    {"rank": "Мифик II", "elo": 4500, "color": "mythic"},
+    {"rank": "Мифик III", "elo": 5000, "color": "mythic"},
+    {"rank": "Легендарный I", "elo": 5500, "color": "legendary"},
+    {"rank": "Легендарный II", "elo": 6250, "color": "legendary"},
+    {"rank": "Легендарный III", "elo": 7000, "color": "legendary"},
+    {"rank": "Мастер I", "elo": 9000, "color": "master"},
+    {"rank": "Мастер II", "elo": 10000, "color": "master"},
+    {"rank": "Мастер III", "elo": 11000, "color": "master"},
+    {"rank": "Pro", "elo": 11250, "color": "pro"}
+];
+
+// Объект стилей
+const RANK_COLORS = {
+    bronza: "#CD7F32",
+    silver: "#C0C0C0",
+    gold: "#FFD700",
+    diamond: "#8B4513",
+    mythic: "#8A2BE2",
+    legendary: "#FF0000",
+    master: "#00008B",
+    pro: "#FF4500"
+};
+
+function getRank(elo) {
+    for (let i = RANK_SYSTEM.length - 1; i >= 0; i--) {
+        if (elo >= RANK_SYSTEM[i].elo) {
+            return RANK_SYSTEM[i];
+        }
+    }
+    return RANK_SYSTEM[0];
+}
+
+        const SPREADSHEET_ID = '1zpcNSoHZaXnUDJtJMRzlWdb_5PFpSiToI_w0eqNSm0I';
+        const RANGE = 'Лист1!A1:D11';
+        const API_KEY = 'AIzaSyDpCRbtDnOGVs0JsFRFN7xdVkEAm1qyA_8';
+
+        async function loadData() {
+    try {
+        const response = await fetch(
+            `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${RANGE}?key=${API_KEY}`
+        );
+        
+        if (!response.ok) {
+            throw new Error('Ошибка запроса: ' + response.statusText);
+        }
+
+        const data = await response.json();
+        displayData(data.values || []);
+    } catch (error) {
+        console.error('Произошла ошибка:', error);
+        showError('Ошибка при загрузке данных');
+    }
+}
+
+function displayData(values) {
+    const resultDiv = document.getElementById('result');
+    let html = `
+        <h2>Данные из таблицы</h2>
+        <table>
+            <caption>Данные из таблицы</caption>
+            <thead>
+                <tr>
+                    <th>Имя</th>
+                    <th>Elo</th>
+                    <th>Pro XP</th>
+                    <th>Победы</th>
+                    <th>Ранг</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    values.forEach((row) => {
+        if (!row[1]) return; // Пропускаем строки без Elo
+        
+        const elo = parseInt(row[1], 10);
+        const rankInfo = getRank(elo);
+        const colorName = rankInfo.color; // Получаем название цвета из rankInfo
+        const color = RANK_COLORS[colorName] || '#000'; // Получаем реальный цвет
+
+        html += `
+            <tr>
+                <td>${row[0] || ''}</td>
+                <td>${elo}</td>
+                <td>${row[2] || 0}</td>
+                <td>${row[3] || 0}</td>
+                <td 
+                    style="
+                        background: ${color};
+                        font-weight: bold;
+                        text-transform: capitalize
+                    "
+                >
+                    ${rankInfo.rank}
+                </td>
+            </tr>
+        `;
+    });
+    
+    html += `
+            </tbody>
+        </table>
+    `;
+    resultDiv.innerHTML = html;
+}
+
+function showError(message) {
+    document.getElementById('result').innerHTML = `<div class="error">${message}</div>`;
+}
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
