@@ -6,7 +6,7 @@
       "dest": "/docs/$1"
     },
     {
-      "src": "/swagger.json",
+      "src": "api/swagger.json",
       "headers": {
         "Access-Control-Allow-Origin": "*"
       }
