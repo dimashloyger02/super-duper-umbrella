@@ -10,17 +10,32 @@
       "description": "Основной сервер"
     }
   ],
+  "tags": [
+    {
+      "name": "users",
+      "description": "Операции с пользователями"
+    },
+    {
+      "name": "monitoring",
+      "description": "Операции с мониторингом"
+    },
+    {
+      "name": "players",
+      "description": "Операции с игроками Brawl Stars"
+    }
+  ],
   "paths": {
     "/users/all": {
       "get": {
         "summary": "Список всех пользователей",
-        "responses": { "200": { "description": "Успех" } },
-        "tags" : ["Лол"]
+        "tags": ["users"],
+        "responses": { "200": { "description": "Успех" } }
       }
     },
     "/users/{user_id}": {
       "get": {
         "summary": "Данные пользователя",
+        "tags": ["users"],
         "parameters": [
           {
             "name": "user_id",
@@ -33,36 +48,43 @@
       },
       "put": {
         "summary": "Обновление пользователя",
+        "tags": ["users"],
         "responses": { "200": { "description": "Успех" } }
       },
       "delete": {
         "summary": "Удаление пользователя",
+        "tags": ["users"],
         "responses": { "200": { "description": "Успех" } }
       }
     },
     "/users": {
       "post": {
         "summary": "Создание пользователя",
+        "tags": ["users"],
         "responses": { "201": { "description": "Успешно создано" } }
       }
     },
     "/monitoring": {
       "get": {
         "summary": "Данные мониторинга",
+        "tags": ["monitoring"],
         "responses": { "200": { "description": "Успех" } }
       },
       "put": {
         "summary": "Обновление мониторинга",
+        "tags": ["monitoring"],
         "responses": { "200": { "description": "Успех" } }
       },
       "delete": {
         "summary": "Очистка мониторинга",
+        "tags": ["monitoring"],
         "responses": { "200": { "description": "Успех" } }
       }
     },
     "/player/{tag}": {
       "get": {
         "summary": "Информация о игроке",
+        "tags": ["players"],
         "parameters": [
           {
             "name": "tag",
