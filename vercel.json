@@ -6,7 +6,7 @@
       "dest": "http://192.168.1.65:5000/$1"
     },
     {
-      "src": "/swagger.json",
+      "src": "https://raw.githubusercontent.com/dimashloyger02/super-duper-umbrella/refs/heads/main/api/swagger.json",
       "headers": {
         "Access-Control-Allow-Origin": "*"
       }
