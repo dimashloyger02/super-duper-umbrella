@@ -14,7 +14,8 @@
     "/users/all": {
       "get": {
         "summary": "Список всех пользователей",
-        "responses": { "200": { "description": "Успех" } }
+        "responses": { "200": { "description": "Успех" } },
+        "tags" : "Лол"
       }
     },
     "/users/{user_id}": {
