@@ -8,6 +8,10 @@
     {
       "url": "http://192.168.1.65:5000/api",
       "description": "Основной сервер"
+    },
+    {
+      "url": "https://brawltytlol.vercel.app/api",
+      "description": "Другой сервер"
     }
   ],
   "tags": [
