@@ -1,0 +1,77 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Test API"
+  },
+  "servers": [
+    {
+      "url": "http://192.168.1.65:5000/api",
+      "description": "Основной сервер"
+    }
+  ],
+  "paths": {
+    "/users/all": {
+      "get": {
+        "summary": "Список всех пользователей",
+        "responses": { "200": { "description": "Успех" } }
+      }
+    },
+    "/users/{user_id}": {
+      "get": {
+        "summary": "Данные пользователя",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": { "200": { "description": "Успех" } }
+      },
+      "put": {
+        "summary": "Обновление пользователя",
+        "responses": { "200": { "description": "Успех" } }
+      },
+      "delete": {
+        "summary": "Удаление пользователя",
+        "responses": { "200": { "description": "Успех" } }
+      }
+    },
+    "/users": {
+      "post": {
+        "summary": "Создание пользователя",
+        "responses": { "201": { "description": "Успешно создано" } }
+      }
+    },
+    "/monitoring": {
+      "get": {
+        "summary": "Данные мониторинга",
+        "responses": { "200": { "description": "Успех" } }
+      },
+      "put": {
+        "summary": "Обновление мониторинга",
+        "responses": { "200": { "description": "Успех" } }
+      },
+      "delete": {
+        "summary": "Очистка мониторинга",
+        "responses": { "200": { "description": "Успех" } }
+      }
+    },
+    "/player/{tag}": {
+      "get": {
+        "summary": "Информация о игроке",
+        "parameters": [
+          {
+            "name": "tag",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "Успех" } }
+      }
+    }
+  }
+}
