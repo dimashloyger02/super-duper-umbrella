@@ -49,11 +49,43 @@
       "put": {
         "summary": "Обновление пользователя",
         "tags": ["users"],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "description": "Данные для обновления пользователя",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "role": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
         "responses": { "200": { "description": "Успех" } }
       },
       "delete": {
         "summary": "Удаление пользователя",
         "tags": ["users"],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
         "responses": { "200": { "description": "Успех" } }
       }
     },
@@ -61,6 +93,23 @@
       "post": {
         "summary": "Создание пользователя",
         "tags": ["users"],
+        "requestBody": {
+          "description": "Данные нового пользователя",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "email": { "type": "string", "format": "email" },
+                  "password": { "type": "string" },
+                  "role": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
         "responses": { "201": { "description": "Успешно создано" } }
       }
     },
@@ -73,6 +122,27 @@
       "put": {
         "summary": "Обновление мониторинга",
         "tags": ["monitoring"],
+        "requestBody": {
+          "description": "Данные для обновления мониторинга",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "metrics": {
+                    "type": "object",
+                    "description": "Метрики мониторинга"
+                  },
+                  "timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": { "200": { "description": "Успех" } }
       },
       "delete": {
