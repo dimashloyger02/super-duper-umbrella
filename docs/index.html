@@ -1,1 +1,44 @@
-Короче тут всё
+<!-- HTML for static distribution bundle build -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.000, maximum-scale=1.000, user-scalable=no, shrink-to-fit=no">
+  <title>Brawl Stars API</title>
+  <link rel="stylesheet" type="text/css" href="https://brawltytlol.vercel.app/css/index.css">
+  <link rel="stylesheet" type="text/css" href="http://192.168.1.65:5000/swagger/swagger-ui.css">
+  <link rel="icon" type="image/png" href="http://192.168.1.65:5000/swagger/favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="http://192.168.1.65:5000/swagger/favicon-16x16.png" sizes="16x16" />
+</head>
+
+<body>
+  <div id="swagger-ui"></div>
+
+  <script src="http://192.168.1.65:5000/swagger/swagger-ui-bundle.js"> </script>
+  <script src="http://192.168.1.65:5000/swagger/swagger-ui-standalone-preset.js"> </script>
+  <script>
+    var config = {
+      presets: [
+        SwaggerUIBundle.presets.apis,
+        SwaggerUIStandalonePreset
+      ],
+      plugins: [
+        SwaggerUIBundle.plugins.DownloadUrl
+      ]
+    };
+    var user_config = {"dom_id": "#swagger-ui", "url": "https://raw.githubusercontent.com/dimashloyger02/super-duper-umbrella/refs/heads/main/api/swagger.json", "layout": "StandaloneLayout", "deepLinking": true, "show_request_headers": true, "show_request_body": true, "oauth2RedirectUrl": "http://192.168.1.65:5000/swagger/oauth2-redirect.html"};  // User config options provided from Python code
+    for (var attrname in user_config) { config[attrname] = user_config[attrname]; }
+
+    window.onload = function () {
+      // Build a system
+      const ui = SwaggerUIBundle(config)
+
+      
+
+    window.ui = ui
+}
+  </script>
+</body>
+
+</html>
