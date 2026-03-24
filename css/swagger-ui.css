@@ -106,3 +106,80 @@
         padding: 6px 10px;
     }
 }
+
+/* Основной заголовок API */
+.title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    padding: 20px 15px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    position: relative;
+}
+
+/* Контейнер для версий */
+.title span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 15px;
+}
+
+/* Стили для версии API */
+.version {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    border-radius: 20px;
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* Дополнительные стили для OAS версии */
+.version-stamp .version {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Стили для маленького текста */
+small {
+    font-size: 0.8em;
+}
+
+/* Медиа-запросы для мобильных устройств */
+@media (max-width: 768px) {
+    .title {
+        padding: 15px;
+        font-size: 20px;
+    }
+    
+    .version {
+        padding: 3px 6px;
+        font-size: 12px;
+    }
+}
+
+.title {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.version:hover {
+    background-color: #0056b3;
+    transform: scale(1.02);
+    transition: background-color 0.3s, transform 0.3s;
+}
