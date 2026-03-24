@@ -1,1 +1,66 @@
+/* Контейнер операции */
+.opblock-get {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
 
+/* Кнопка операции */
+.opblock-summary-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.opblock-summary-method {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+/* Путь эндпоинта */
+.opblock-summary-path {
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.opblock-summary-description {
+    color: #6c757d;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+/* Иконки и кнопки */
+.view-line-link {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+.copy-to-clipboard {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+}
+
+.copy-to-clipboard:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+
+/* Стрелка раскрытия */
+.opblock-control-arrow {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s;
+}
+
+.opblock-control-arrow[aria-expanded="true"] {
+    transform: rotate(180deg);
+}
