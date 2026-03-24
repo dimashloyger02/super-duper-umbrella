@@ -1,33 +1,45 @@
-/* Контейнер операции */
-.opblock-get {
-    background-color: #f8f9fa;
+/* Базовый стиль для всех операций */
+.opblock {
+    background-color: #ffffff;
     padding: 15px;
     border-radius: 4px;
     margin-bottom: 15px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: background-color 0.3s;
 }
 
-/* Кнопка операции */
-.opblock-summary-control {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
+/* Стили для разных HTTP-методов */
+.opblock-get .opblock-summary-method {
+    background-color: #28a745; /* Зеленый для GET */
 }
 
+.opblock-put .opblock-summary-method {
+    background-color: #ffc107; /* Желтый для PUT */
+}
+
+.opblock-delete .opblock-summary-method {
+    background-color: #dc3545; /* Красный для DELETE */
+}
+
+.opblock-post .opblock-summary-method {
+    background-color: #17a2b8; /* Синий для POST */
+}
+
+/* Общие стили для всех методов */
 .opblock-summary-method {
-    background-color: #007bff;
-    color: white;
     padding: 5px 10px;
     border-radius: 3px;
+    color: white;
     font-weight: 600;
+    min-width: 50px;
+    text-align: center;
 }
 
-/* Путь эндпоинта */
+/* Стили для пути эндпоинта */
 .opblock-summary-path {
     font-weight: 600;
     color: #333;
-    font-size: 1.1em;
+    margin-left: 10px;
 }
 
 .opblock-summary-description {
@@ -36,7 +48,7 @@
     margin-top: 5px;
 }
 
-/* Иконки и кнопки */
+/* Стили для кнопок копирования */
 .view-line-link {
     margin-left: auto;
     display: flex;
@@ -54,7 +66,7 @@
     background-color: rgba(0,0,0,0.1);
 }
 
-/* Стрелка раскрытия */
+/* Стили для стрелок раскрытия */
 .opblock-control-arrow {
     width: 20px;
     height: 20px;
@@ -63,4 +75,9 @@
 
 .opblock-control-arrow[aria-expanded="true"] {
     transform: rotate(180deg);
+}
+
+/* Эффект при наведении на операцию */
+.opblock:hover {
+    background-color: #f8f9fa;
 }
