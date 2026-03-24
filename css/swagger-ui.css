@@ -37,7 +37,7 @@
 
 /* Цвета для разных методов */
 .opblock-get .opblock-summary-method {
-    background-color: #28a745; /* Зеленый */
+    background-color: #17a2b8; /* Зеленый */
 }
 
 .opblock-put .opblock-summary-method {
@@ -49,7 +49,7 @@
 }
 
 .opblock-post .opblock-summary-method {
-    background-color: #17a2b8; /* Синий */
+    background-color: #28a745; /* Синий */
 }
 
 /* Стили для пути эндпоинта */
