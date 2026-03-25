@@ -57,6 +57,7 @@
 <script>
 let dsa = 0; // Счетчик для функций fun_
 let dsb = 0; // Счетчик для textarea
+let dsc = 0; // Счетчик для exec_
 
 async function loadSwaggerSpec() {
     try {
@@ -91,6 +92,7 @@ function renderMethods(spec) {
             const operation = spec.paths[path][method];
             dsa++; // Увеличиваем счетчик для fun_
             dsb++; // Увеличиваем счетчик для textarea
+            dsc++; // Увеличиваем счетчик для exec_
             
             html += `
                 <div class="opblock opblock-${method}">
@@ -111,6 +113,7 @@ function renderMethods(spec) {
                             >Execute</button>
                         </div>
                     </div>
+                    <pre class="microlight" style="display: block; overflow-x: auto; padding: 0.5em; background: rgb(51, 51, 51); color: white;"><code class="language-json" style="white-space: pre;"><span id="exec_${dsc}">Тут будет выведен запрос</span></code></pre>
                 </div>
             `;
         }
