@@ -14,3 +14,20 @@ body {
     margin: 0;
     background: #999999;
 }
+@font-face {
+            font-family: '2';
+            src: url('https://forumstatic.ru/files/001a/a3/94/73088.ttf?v=1');
+            }
+.body-param__text {
+    width: 100%;
+    height: 250px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: '2';
+    resize: vertical;
+}
+body, button, pre{
+font-family: '2';
+}
