@@ -58,6 +58,7 @@
 let dsa = 0; // Счетчик для функций fun_
 let dsb = 0; // Счетчик для textarea
 let dsc = 0; // Счетчик для exec_
+let specs = {}
 
 async function loadSwaggerSpec() {
     try {
@@ -141,6 +142,7 @@ function handleGetRequest(url, textareaId) {
             if (this.status === 200) {
                 try {
                     const response = JSON.parse(this.responseText);
+                    specs = response
                     console.log(response);
                 } catch (error) {
                     console.error('Ошибка парсинга:', error);
@@ -167,6 +169,7 @@ function handlePostRequest(url, textareaId) {
         if (this.readyState === 4) {
             try {
                 const response = JSON.parse(this.responseText);
+                specs = response
                 console.log(response);
             } catch (error) {
                 console.error('Ошибка парсинга:', error);
@@ -211,6 +214,7 @@ function handlePutRequest(url, textareaId, data) {
         if (this.readyState === 4) {
             try {
                 const response = JSON.parse(this.responseText);
+                specs = response
                 console.log('Ответ:', response);
                 showResponse(response, textareaId);
             } catch (error) {
@@ -234,6 +238,8 @@ function handleDeleteRequest(url, textareaId) {
         if (this.readyState === 4) {
             try {
                 const response = JSON.parse(this.responseText);
+                specs = response
+                
                 console.log(response);
             } catch (error) {
                 console.error('Ошибка парсинга:', error);
@@ -248,6 +254,8 @@ function handleDeleteRequest(url, textareaId) {
 
 function fun_1() { // GET /users/all
     handleGetRequest(getFullUrl('/users/all'), 'valtext_1');
+    exec_1.innerText = JSON.stringify(specs, null, 2)
+    
 }
 
 function fun_2() { // GET /users/{user_id}
@@ -255,10 +263,12 @@ function fun_2() { // GET /users/{user_id}
         getFullUrl('/users/' + document.getElementById('valtext_2').value),
         'valtext_2'
     );
+    exec_2.innerText = JSON.stringify(specs, null, 2)
 }
 
 function fun_3() { // PUT /users/{user_id}
     handleUserPutRequest('/users', 'valtext_3');
+    exec_3.innerText = JSON.stringify(specs, null, 2)
 }
 
 function fun_4() { // DELETE /users/{user_id}
@@ -266,14 +276,17 @@ function fun_4() { // DELETE /users/{user_id}
         getFullUrl('/users/' + document.getElementById('valtext_4').value),
         'valtext_4'
     );
+    exec_4.innerText = JSON.stringify(specs, null, 2)
 }
 
 function fun_5() { // POST /users
     handlePostRequest(getFullUrl('/users'), 'valtext_5');
+    exec_5.innerText = JSON.stringify(specs, null, 2)
 }
 
 function fun_6() { // GET /monitoring
     handleGetRequest(getFullUrl('/monitoring'), 'valtext_6');
+    exec_6.innerText = JSON.stringify(specs, null, 2)
 }
 
 function fun_7() { // PUT /monitoring
@@ -282,10 +295,12 @@ function fun_7() { // PUT /monitoring
         'valtext_7',
         document.getElementById('valtext_7').value
     );
+    exec_7.innerText = JSON.stringify(specs, null, 2)
 }
 
 function fun_8() { // DELETE /monitoring
     handleDeleteRequest(getFullUrl('/monitoring'), 'valtext_8');
+    exec_8.innerText = JSON.stringify(specs, null, 2)
 }
 
 function fun_9() { // GET /player/{tag}
@@ -293,6 +308,7 @@ function fun_9() { // GET /player/{tag}
         getFullUrl('/player/' + document.getElementById('valtext_9').value),
         'valtext_9'
     );
+    exec_9.innerText = JSON.stringify(specs, null, 2)
 }
 
 function numnot() {
