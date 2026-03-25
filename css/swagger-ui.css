@@ -183,3 +183,67 @@ small {
     transform: scale(1.02);
     transition: background-color 0.3s, transform 0.3s;
 }
+
+/* Общие стили для чек-листа */
+.checklist {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Стили для заголовков */
+.checklist h2 {
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+/* Стили для списков */
+.checklist ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.checklist li {
+    margin-bottom: 10px;
+    padding: 5px 0;
+    border-bottom: 1px dotted #ddd;
+}
+
+/* Стили для маркеров статуса */
+.status {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.red {
+    background: #ff4d4d;
+}
+
+.green {
+    background: #4dff4d;
+}
+
+.yellow {
+    background: #ffeb3b;
+}
+
+/* Стили для акцентов */
+.bold {
+    font-weight: bold;
+}
+
+/* Медиазапросы */
+@media (max-width: 768px) {
+    .checklist {
+        padding: 15px;
+    }
+}
