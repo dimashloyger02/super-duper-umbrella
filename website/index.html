@@ -24,7 +24,10 @@ font-family: '2';
     <script src="https://telegram.org/js/telegram-web-app.js?61"></script>
 </head>
 <body>
-    <div id="version">Версия сайта: v 0.0</div>
+    <div id="version">Версия сайта: v 0.0</div><br>
+Кнопки для теста:<br>
+<button onclick="lol1()">fox.BackButton.show()</button><br>
+<button onclick="lol2()">fox.BackButton.hide()</button><br>
 
        <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>
@@ -32,6 +35,13 @@ font-family: '2';
     <script>
     fox = Telegram.WebApp
     console.log(fox)
+
+function lol1(){
+    fox.BackButton.show()
+}
+function lol2(){
+    fox.BackButton.hide()
+}       
     </script>
 </body>
 </html>
