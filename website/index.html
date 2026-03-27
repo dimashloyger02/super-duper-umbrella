@@ -28,6 +28,7 @@ font-family: '2';
 Кнопки для теста:<br>
 <button onclick="lol1()">fox.BackButton.show()</button><br>
 <button onclick="lol2()">fox.BackButton.hide()</button><br>
+<button onclick="lol3()">fox.showPopup()</button><br>
 
        <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>
@@ -41,7 +42,37 @@ function lol1(){
 }
 function lol2(){
     fox.BackButton.hide()
-}       
+} 
+function lol3(){
+    fox.showPopup({
+    message: 'Тест\nЛол',
+    buttons: [
+        {
+            id: 'button1',
+            text: 'Да'
+        },
+        {
+            id: 'button2',
+            text: 'Нет'
+        }
+    ],
+    title: 'Заголовок окна',
+    color: '#000000',
+    background: '#ffffff',
+    onClose: function(buttonId) {
+        switch(buttonId) {
+            case 'button1':
+                alert('Нажата кнопка Да');
+                break;
+            case 'button2':
+                alert('Нажата кнопка Нет');
+                break;
+            default:
+                alert('Неизвестная кнопка');
+        }
+    }
+});
+}
     </script>
 </body>
 </html>
