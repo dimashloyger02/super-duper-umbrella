@@ -19,14 +19,18 @@
 
         body, button, pre{
 font-family: '2';
-        },
-        /* Стили, которые уже есть в Telegram Web App */
-.tg-web-app-header {
-    font-family: '2'; /* Использует системный шрифт Telegram */
-    font-size: 16px;
-}        
+        }
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js?61"></script>
 </head>
 <body>
     <div id="version">Версия сайта: v 0.2</div>
+
+    <script>
+        // Меняем цвет заголовка
+document.querySelector('.tg-web-app-header').style.color = '#ff0000';
+
+// Меняем шрифт
+document.querySelector('.tg-web-app-header').style.fontFamily = '2';
+        
+    </script>
