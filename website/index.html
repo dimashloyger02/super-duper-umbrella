@@ -87,7 +87,7 @@ drawShapeWithText();
 
 function lol0() {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'http://localhost:2435/storage/emulated/0/python001/bot/user_data.json', true);
+    xhr.open('GET', 'http://192.168.1.65:5000/api/users/all', true);
     xhr.timeout = 12000;
     
     xhr.onreadystatechange = processRequest;
