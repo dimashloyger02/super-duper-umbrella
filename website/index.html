@@ -18,20 +18,117 @@
             color: #fff;
             font-family: '2';
             padding: 0px;
-            font-size: 16px;
+            font-size: 20px;
         }
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js?61"></script>
 </head>
 <body>
     <div id="version">Версия сайта: v 0.0</div><br>
+<div style="width: 100%; max-width: 800px;">
+    <canvas id="chart" width="450" height="320" onclick="lol0()"></canvas>
 
        <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>
 
     <script>
-    fox = Telegram.WebApp
-    console.log(fox)
+    lol = {}
+    lol.WebApp = Telegram.WebApp
+    lol.WebView = Telegram.WebView
+    lol.Utils = Telegram.Utils
+    console.log(lol.WebApp)
+    console.log(lol.WebView)
+    console.log(lol.Utils)
     </script>
+    
+    <script>
+const canvas = document.getElementById('chart');
+const ctx = canvas.getContext('2d');
+let homer = {};
+
+function drawShapeWithText() {
+    // Очищаем холст
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Параметры фигуры
+    const width = 450;
+    const height = 320;
+    const borderRadius = 0;
+    const bgColor = '#222222';
+    const textColor = '#000000';
+    const padding = 0; // Отступы внутри фигуры
+
+    // Рисуем скругленный прямоугольник
+    ctx.beginPath();
+    ctx.moveTo(borderRadius, padding);
+    ctx.lineTo(width - borderRadius, padding);
+    ctx.quadraticCurveTo(width, padding, width, padding + borderRadius);
+    ctx.lineTo(width, height - borderRadius - padding);
+    ctx.quadraticCurveTo(width, height - padding, width - borderRadius, height - padding);
+    ctx.lineTo(borderRadius, height - padding);
+    ctx.quadraticCurveTo(0, height - padding, 0, height - padding - borderRadius);
+    ctx.lineTo(0, padding + borderRadius);
+    ctx.quadraticCurveTo(0, padding, borderRadius, padding);
+    ctx.closePath();
+    ctx.fillStyle = bgColor;
+    ctx.fill();
+
+    // Настраиваем текст
+    ctx.font = '20px "2"';
+    ctx.fillStyle = textColor;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    
+    // Позиционирование текста
+    }
+
+// Вызываем функцию отрисовки
+drawShapeWithText();
+
+function lol0() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'http://localhost:2435/storage/emulated/0/python001/bot/user_data.json', true);
+    xhr.timeout = 12000;
+    
+    xhr.onreadystatechange = processRequest;
+    xhr.send();
+
+    function processRequest(e) {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            try {
+                const bas1 = JSON.parse(xhr.responseText);
+                
+                // Сортируем пользователей по гемсам
+                const users = Object.keys(bas1).map(key => ({
+                    id: key,
+                    data: bas1[key]
+                })).sort((a, b) => b.data.gems - a.data.gems);
+
+                // Очищаем холст перед отрисовкой
+                drawShapeWithText();
+                
+                // Параметры отображения
+                const startY = 20;
+                const lineHeight = 30;
+                const maxUsers = 10; // Отображаем топ-10
+                
+                // Отрисовываем топ
+                for (let i = 0; i < Math.min(maxUsers, users.length); i++) {
+                    const user = users[i];
+                    const y = startY + i * lineHeight;
+                    
+                    ctx.save();
+                    ctx.font = '16px "2"';
+                    ctx.fillStyle = '#00FF00';
+                    ctx.fillText(`${i + 1}. ${user.data.first_name} - ${user.data.gems} гемсов`, 20, y);
+                    ctx.restore();
+                }
+            } catch (error) {
+                console.error('Ошибка при обработке данных:', error);
+            }
+        }
+    }
+}
+</script>
 </body>
 </html>
