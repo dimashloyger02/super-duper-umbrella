@@ -6,8 +6,12 @@
     <title>Brawl Stars Статистика</title>
     <style>
         @font-face {
-            font-family: '2';
+            font-family: '1';
             src: url('https://brawltytlol.vercel.app/css/progresspixel8bit.ttf');
+        }
+        @font-face {
+            font-family: '2';
+            src: url('https://brawltytlol.vercel.app/css/progresspixel8bitpab.ttf');
         }
     body {
             background: #000;
@@ -16,19 +20,11 @@
             padding: 0px;
             font-size: 16px;
         }
-
-        body, button, pre{
-font-family: '2';
-        }
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js?61"></script>
 </head>
 <body>
     <div id="version">Версия сайта: v 0.0</div><br>
-Кнопки для теста:<br>
-<button onclick="lol1()">fox.BackButton.show()</button><br>
-<button onclick="lol2()">fox.BackButton.hide()</button><br>
-<button onclick="lol3()">fox.showPopup()</button><br>
 
        <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>
@@ -36,43 +32,6 @@ font-family: '2';
     <script>
     fox = Telegram.WebApp
     console.log(fox)
-
-function lol1(){
-    fox.BackButton.show()
-}
-function lol2(){
-    fox.BackButton.hide()
-} 
-function lol3(){
-    fox.showPopup({
-    message: 'Тест\nЛол',
-    buttons: [
-        {
-            id: 'button1',
-            text: 'Да'
-        },
-        {
-            id: 'button2',
-            text: 'Нет'
-        }
-    ],
-    title: 'Заголовок окна',
-    color: '#000000',
-    background: '#ffffff',
-    onClose: function(buttonId) {
-        switch(buttonId) {
-            case 'button1':
-                alert('Нажата кнопка Да');
-                break;
-            case 'button2':
-                alert('Нажата кнопка Нет');
-                break;
-            default:
-                alert('Неизвестная кнопка');
-        }
-    }
-});
-}
     </script>
 </body>
 </html>
