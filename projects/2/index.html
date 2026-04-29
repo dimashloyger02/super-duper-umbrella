@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Clicker Challenge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+        @font-face {
+    font-family: '1';
+    src: url('https://brawltytlol.vercel.app/css/progresspixel8bit.ttf');
+}
+@font-face {
+    font-family: '2';
+    src: url('https://brawltytlol.vercel.app/css/progresspixel8bitpab.ttf');
+}
+@font-face {
+    font-family: '3';
+    src: url('https://brawltytlol.vercel.app/css/DOSFont.ttf');
+}
+@font-face {
+    font-family: '4';
+    src: url('https://brawltytlol.vercel.app/css/ABFlockHeadline-Regular.ttf');
+}
+@font-face {
+    font-family: '5';
+    src: url('https://brawltytlol.vercel.app/css/Rubik-Regular.ttf');
+}
+        @font-face {
+            font-family: '6';
+            src: url('https://forumstatic.ru/files/001a/a3/94/73088.ttf?v=1');
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            font-family: '2', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #seasonTimerContainer {
+            color: #ffff00;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 2px solid #ffff00;
+            padding: 10px;
+            width: 300px;
+        }
+
+        .console-box {
+            border: 4px solid #ffff00;
+            padding: 20px;
+            background: #000;
+            color: #ffff00;
+            width: 300px;
+            text-align: center;
+        }
+
+        #click-score { font-size: 50px; margin: 15px 0; }
+
+        button {
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: '2';
+        }
+
+        #click-btn {
+            width: 100%;
+            height: 70px;
+            background: #ffff00;
+            color: #000;
+            font-weight: bold;
+            font-size: 24px;
+            border: none;
+        }
+
+        #click-btn:disabled { background: #555; opacity: 0.6; }
+
+        #start-btn {
+            width: 100%;
+            margin-top: 15px;
+            padding: 10px;
+            background: #222;
+            color: #fff;
+            border: 1px solid #ffff00;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="seasonTimerContainer">
+        <div style="font-size: 14px;">ДО КОНЦА СЕЗОНА:</div>
+        <div id="seasonTimer">Загрузка...</div>
+    </div>
+
+    <div class="console-box">
+        <h3 style="margin-top: 0;">CLICKER CHALLENGE</h3>
+        <div style="font-size: 12px;">ЦЕЛЬ: 0 | ВРЕМЯ: 0с</div>
+        <div id="click-score">0</div>
+        <div id="timer-left" style="color: #ff0000; margin-bottom: 10px;">ОСТАЛОСЬ: 0с</div>
+        <button id="click-btn" onclick="makeClick()" disabled>КЛИК!</button>
+        <button id="start-btn" onclick="startGame()">НАЧАТЬ ИГРУ</button>
+    </div>
+
+<script>
+    let clicks = 0;
+    let timeLeft = 10;
+    const target = 5;
+    let isPlaying = false;
+    let gameTimer;
+
+    function startGame() {
+        if (isPlaying) return;
+        
+        clicks = 0;
+        timeLeft = 10;
+        isPlaying = true;
+        
+        document.getElementById('click-score').innerText = clicks;
+        document.getElementById('click-btn').disabled = false;
+        document.getElementById('start-btn').innerText = "В ПРОЦЕССЕ...";
+
+        gameTimer = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer-left').innerText = `ОСТАЛОСЬ: ${timeLeft}с`;
+            if (timeLeft <= 0) endGame();
+        }, 1000);
+    }
+
+    function makeClick() {
+        if (!isPlaying) return;
+        clicks++;
+        document.getElementById('click-score').innerText = clicks;
+    }
+
+    function endGame() {
+        clearInterval(gameTimer);
+        isPlaying = false;
+        document.getElementById('click-btn').disabled = true;
+        document.getElementById('start-btn').innerText = "ИГРАТЬ СНОВА";
+
+        if (clicks >= target) {
+            alert("ПОБЕДА! ⭐");
+        } else {
+            alert("ПРОИГРЫШ! 😞");
+        }
+    }
+
+    // Формат: ГГГГ-ММ-ДД
+    const seasonEndDate = new Date("2026-05-07T15:00:00").getTime();
+
+    function updateSeasonTimer() {
+        const now = new Date().getTime();
+        const distance = seasonEndDate - now;
+
+        if (distance < 0) {
+            document.getElementById("seasonTimer").innerHTML = "СЕЗОН ЗАВЕРШЕН!";
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("seasonTimer").innerHTML = `${days}д ${hours}ч ${minutes}м ${seconds}с`;
+    }
+
+    setInterval(updateSeasonTimer, 1000);
+    updateSeasonTimer();
+</script>
+</body>
+</html>
