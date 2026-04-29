@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Brawl Stars 2.0 Console</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.000, maximum-scale=1.000, user-scalable=no, shrink-to-fit=no">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="utf-8">
+    <style>
+    @font-face {
+    font-family: '1';
+    src: url('https://brawltytlol.vercel.app/css/progresspixel8bit.ttf');
+}
+@font-face {
+    font-family: '2';
+    src: url('https://brawltytlol.vercel.app/css/progresspixel8bitpab.ttf');
+}
+@font-face {
+    font-family: '3';
+    src: url('https://brawltytlol.vercel.app/css/DOSFont.ttf');
+}
+@font-face {
+    font-family: '4';
+    src: url('https://brawltytlol.vercel.app/css/ABFlockHeadline-Regular.ttf');
+}
+@font-face {
+    font-family: '5';
+    src: url('https://brawltytlol.vercel.app/css/Rubik-Regular.ttf');
+}
+        @font-face {
+            font-family: '6';
+            src: url('https://forumstatic.ru/files/001a/a3/94/73088.ttf?v=1');
+        }
+        body {
+            background: #000000;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-size: 16px;
+            color: #ffffff;
+            font-family: '1';
+        }
+        .header-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: orange;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+            font-family: '2';
+        }
+        th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ffffff; /* Добавляем границу */
+    font-family: '2';
+}
+
+        th {
+    background-color: #222; /* Опционально: добавляем фоновый цвет для заголовков */
+}
+#competitionContainer1 {
+    font-family: '2';
+    padding: 0px;
+    font-size: 18px;
+}
+#competitionContainer2 {
+    font-family: '2';
+    padding: 0px;
+    font-size: 18px;
+}
+#competitionContainer3 {
+    font-family: '2';
+    padding: 0px;
+    font-size: 18px;
+}
+#competitionContainer4 {
+    font-family: '2';
+    padding: 0px;
+    font-size: 18px;
+}
+#competitionContainer5 {
+    font-family: '2';
+    padding: 0px;
+    font-size: 18px;
+}
+    </style>
+</head>
+<body>
+<div id="competitionContainer1">holdik</div>
+<button onclick="loadStarer1()">Обновить</button><hr>
+<div id="competitionContainer2">YT|BEZSMERTNY</div>
+<button onclick="loadStarer2()">Обновить</button><hr>
+<div id="competitionContainer3">гиадаркс</div>
+<button onclick="loadStarer3()">Обновить</button><hr>
+<div id="competitionContainer4">GiadarxMommy</div>
+<button onclick="loadStarer4()">Обновить</button><hr>
+<div id="competitionContainer5">Дима</div>
+<button onclick="loadStarer5()">Обновить</button><hr>
+<div id="logshom"></div><hr>
+<div id="seasonTimerContainer" style="color: #ffff00; font-size: 20px; font-family: '2'; text-align: center; margin-bottom: 15px; border: 1px solid #ffff00; padding: 5px;">
+    <div style="font-size: 14px;">ДО КОНЦА 49-ГО СЕЗОНА:</div>
+    <div id="seasonTimer">0д 00ч 00м 00с</div>
+</div>
+</body>
+
+<script>
+homer = {}
+homer.trophies = 0
+homer.name = 'No name'
+lesa1()
+
+function lesa1(){
+dol1 = new Date()
+homer.updated = `${dol1.toLocaleDateString()}T${dol1.toLocaleTimeString()}.000000`
+}
+
+async function loadStats(playerTag) {
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/api/player/${playerTag}`);
+        
+        // 1. Если Flask вообще выключен (Ошибка 404 или нет связи)
+        if (!response.ok) {
+            console.error(`Сервер недоступен: ${response.status}`);
+            return { error: "Flask отключен" }; 
+        }
+        
+        const homs = await response.json();
+
+        // 2. Если Flask работает, но API Brawl Stars выдало ошибку (Техперерыв)
+        if (homs.error) {
+            console.warn(`Проблема с API для ${playerTag}:`, homs.error);
+            // Возвращаем объект с ошибкой, чтобы основной код знал, что рисовать красный блок
+            return homs; 
+        }
+        
+        // 3. Если всё отлично — сохраняем в homer
+        console.log('Данные получены:', homs);
+        homer = homs;
+        return homs;
+        
+    } catch (error) {
+        // Если вообще нет интернета или Flask «упал»
+        console.error(`Критическая ошибка для тега ${playerTag}:`, error);
+        return { error: "Ошибка сети или Flask" };
+    }
+}
+
+async function loadStarer1() {
+    lesa1()
+    await loadStats('80RCCGQL'); 
+    
+    let current = homer.trophies;
+    
+    // --- ЗА СЕГОДНЯ (уже есть) ---
+    let dep1 = 199016; 
+    let diff = current - dep1;
+    let color = "#ffffff";
+    if (diff < 0) { color = "#ff0000"; } 
+    else if (diff >= 100) { color = "#00ff00"; } 
+    else if (diff > 0) { color = "#ffff00"; }
+
+    // --- ЗА НЕДЕЛЮ (новое) ---
+    let depWeek = 199016; // Твоя точка отсчета
+    let diffWeek = current - depWeek;
+    let colorWeek = "#ffffff";
+    if (diffWeek < 0) { colorWeek = "#ff0000"; }
+    else if (diffWeek >= 700) { colorWeek = "#00ff00"; }
+    else if (diffWeek > 0) { colorWeek = "#ffff00"; }
+
+    // --- ЗА СЕЗОН (новое) ---
+    let depSeason = 199016; // Твоя точка отсчета
+    let diffSeason = current - depSeason;
+    let colorSeason = "#ffffff";
+    if (diffSeason < 0) { colorSeason = "#ff0000"; }
+    else if (diffSeason >= 1000) { colorSeason = "#00ff00"; }
+    else if (diffSeason > 0) { colorSeason = "#ffff00"; }
+
+    let timePart = homer.updated ? homer.updated.split('T')[1].slice(0, 8) : '--:--:--';
+
+    // ВЫВОД: Добавляем новые строки в контейнер
+    document.getElementById('competitionContainer1').innerHTML = `
+        <div style="font-size: 18px; font-family: '2';">
+            <div style="color: ${color};">${homer.name}: ${current} кубков<br>[${diff > 0 ? '+' : ''}${diff}] за сегодня</div>
+            <div style="color: ${colorWeek};">[${diffWeek > 0 ? '+' : ''}${diffWeek}] за неделю</div>
+            <div style="color: ${colorSeason};">[${diffSeason > 0 ? '+' : ''}${diffSeason}] за сезон</div>
+        </div>
+    `;
+    
+    // ЛОГИ: Оставляем как было, чтобы не спамить лишним
+    logshom.innerHTML += `[${timePart}] ${homer.name}: ${current} [${diff > 0 ? '+' : ''}${diff}]<br>`
+    lesa2()
+}
+
+async function loadStarer2() {
+    lesa1()
+    await loadStats('ULQY2U8U'); 
+    
+    let current = homer.trophies;
+    
+    // --- ЗА СЕГОДНЯ (уже есть) ---
+    let dep2 = 199153; 
+    let diff = current - dep2;
+    let color = "#ffffff";
+    if (diff < 0) { color = "#ff0000"; } 
+    else if (diff >= 100) { color = "#00ff00"; } 
+    else if (diff > 0) { color = "#ffff00"; }
+
+    // --- ЗА НЕДЕЛЮ (новое) ---
+    let depWeek = 199153; // Твоя точка отсчета
+    let diffWeek = current - depWeek;
+    let colorWeek = "#ffffff";
+    if (diffWeek < 0) { colorWeek = "#ff0000"; }
+    else if (diffWeek >= 700) { colorWeek = "#00ff00"; }
+    else if (diffWeek > 0) { colorWeek = "#ffff00"; }
+
+    // --- ЗА СЕЗОН (новое) ---
+    let depSeason = 199153; // Твоя точка отсчета
+    let diffSeason = current - depSeason;
+    let colorSeason = "#ffffff";
+    if (diffSeason < 0) { colorSeason = "#ff0000"; }
+    else if (diffSeason >= 1000) { colorSeason = "#00ff00"; }
+    else if (diffSeason > 0) { colorSeason = "#ffff00"; }
+
+    let timePart = homer.updated ? homer.updated.split('T')[1].slice(0, 8) : '--:--:--';
+
+    // ВЫВОД: Добавляем новые строки в контейнер
+    document.getElementById('competitionContainer2').innerHTML = `
+        <div style="font-size: 18px; font-family: '2';">
+            <div style="color: ${color};">${homer.name}: ${current} кубков<br>[${diff > 0 ? '+' : ''}${diff}] за сегодня</div>
+            <div style="color: ${colorWeek};">[${diffWeek > 0 ? '+' : ''}${diffWeek}] за неделю</div>
+            <div style="color: ${colorSeason};">[${diffSeason > 0 ? '+' : ''}${diffSeason}] за сезон</div>
+        </div>
+    `;
+    
+    // ЛОГИ: Оставляем как было, чтобы не спамить лишним
+    logshom.innerHTML += `[${timePart}] ${homer.name}: ${current} [${diff > 0 ? '+' : ''}${diff}]<br>`
+    lesa2()
+}
+
+async function loadStarer3() {
+    lesa1()
+    await loadStats('8GYRLPJ09'); 
+    
+    let current = homer.trophies;
+    
+    // --- ЗА СЕГОДНЯ (уже есть) ---
+    let dep3 = 70693; 
+    let diff = current - dep3;
+    let color = "#ffffff";
+    if (diff < 0) { color = "#ff0000"; } 
+    else if (diff >= 100) { color = "#00ff00"; } 
+    else if (diff > 0) { color = "#ffff00"; }
+
+    // --- ЗА НЕДЕЛЮ (новое) ---
+    let depWeek = 70454; // Твоя точка отсчета
+    let diffWeek = current - depWeek;
+    let colorWeek = "#ffffff";
+    if (diffWeek < 0) { colorWeek = "#ff0000"; }
+    else if (diffWeek >= 700) { colorWeek = "#00ff00"; }
+    else if (diffWeek > 0) { colorWeek = "#ffff00"; }
+
+    // --- ЗА СЕЗОН (новое) ---
+    let depSeason = 70454; // Твоя точка отсчета
+    let diffSeason = current - depSeason;
+    let colorSeason = "#ffffff";
+    if (diffSeason < 0) { colorSeason = "#ff0000"; }
+    else if (diffSeason >= 1000) { colorSeason = "#00ff00"; }
+    else if (diffSeason > 0) { colorSeason = "#ffff00"; }
+
+    let timePart = homer.updated ? homer.updated.split('T')[1].slice(0, 8) : '--:--:--';
+
+    // ВЫВОД: Добавляем новые строки в контейнер
+    document.getElementById('competitionContainer3').innerHTML = `
+        <div style="font-size: 18px; font-family: '2';">
+            <div style="color: ${color};">${homer.name}: ${current} кубков<br>[${diff > 0 ? '+' : ''}${diff}] за сегодня</div>
+            <div style="color: ${colorWeek};">[${diffWeek > 0 ? '+' : ''}${diffWeek}] за неделю</div>
+            <div style="color: ${colorSeason};">[${diffSeason > 0 ? '+' : ''}${diffSeason}] за сезон</div>
+        </div>
+    `;
+    
+    // ЛОГИ: Оставляем как было, чтобы не спамить лишним
+    logshom.innerHTML += `[${timePart}] ${homer.name}: ${current} [${diff > 0 ? '+' : ''}${diff}]<br>`
+    lesa2()
+}
+
+async function loadStarer4() {
+    lesa1()
+    await loadStats('LUJJ9UY8L'); 
+    
+    let current = homer.trophies;
+    
+    // --- ЗА СЕГОДНЯ (уже есть) ---
+    let dep4 = 59134; 
+    let diff = current - dep4;
+    let color = "#ffffff";
+    if (diff < 0) { color = "#ff0000"; } 
+    else if (diff >= 100) { color = "#00ff00"; } 
+    else if (diff > 0) { color = "#ffff00"; }
+
+    // --- ЗА НЕДЕЛЮ (новое) ---
+    let depWeek = 58957; // Твоя точка отсчета
+    let diffWeek = current - depWeek;
+    let colorWeek = "#ffffff";
+    if (diffWeek < 0) { colorWeek = "#ff0000"; }
+    else if (diffWeek >= 700) { colorWeek = "#00ff00"; }
+    else if (diffWeek > 0) { colorWeek = "#ffff00"; }
+
+    // --- ЗА СЕЗОН (новое) ---
+    let depSeason = 58957; // Твоя точка отсчета
+    let diffSeason = current - depSeason;
+    let colorSeason = "#ffffff";
+    if (diffSeason < 0) { colorSeason = "#ff0000"; }
+    else if (diffSeason >= 1000) { colorSeason = "#00ff00"; }
+    else if (diffSeason > 0) { colorSeason = "#ffff00"; }
+
+    let timePart = homer.updated ? homer.updated.split('T')[1].slice(0, 8) : '--:--:--';
+
+    // ВЫВОД: Добавляем новые строки в контейнер
+    document.getElementById('competitionContainer4').innerHTML = `
+        <div style="font-size: 18px; font-family: '2';">
+            <div style="color: ${color};">${homer.name}: ${current} кубков<br>[${diff > 0 ? '+' : ''}${diff}] за сегодня</div>
+            <div style="color: ${colorWeek};">[${diffWeek > 0 ? '+' : ''}${diffWeek}] за неделю</div>
+            <div style="color: ${colorSeason};">[${diffSeason > 0 ? '+' : ''}${diffSeason}] за сезон</div>
+        </div>
+    `;
+    
+    // ЛОГИ: Оставляем как было, чтобы не спамить лишним
+    logshom.innerHTML += `[${timePart}] ${homer.name}: ${current} [${diff > 0 ? '+' : ''}${diff}]<br>`
+    lesa2()
+}
+
+async function loadStarer5() {
+    lesa1()
+    await loadStats('29G9UY820'); 
+    
+    let current = homer.trophies;
+    
+    // --- ЗА СЕГОДНЯ (уже есть) ---
+    let dep5 = 36393; 
+    let diff = current - dep5;
+    let color = "#ffffff";
+    if (diff < 0) { color = "#ff0000"; } 
+    else if (diff >= 100) { color = "#00ff00"; } 
+    else if (diff > 0) { color = "#ffff00"; }
+
+    // --- ЗА НЕДЕЛЮ (новое) ---
+    let depWeek = 36393; // Твоя точка отсчета
+    let diffWeek = current - depWeek;
+    let colorWeek = "#ffffff";
+    if (diffWeek < 0) { colorWeek = "#ff0000"; }
+    else if (diffWeek >= 700) { colorWeek = "#00ff00"; }
+    else if (diffWeek > 0) { colorWeek = "#ffff00"; }
+
+    // --- ЗА СЕЗОН (новое) ---
+    let depSeason = 36393; // Твоя точка отсчета
+    let diffSeason = current - depSeason;
+    let colorSeason = "#ffffff";
+    if (diffSeason < 0) { colorSeason = "#ff0000"; }
+    else if (diffSeason >= 1000) { colorSeason = "#00ff00"; }
+    else if (diffSeason > 0) { colorSeason = "#ffff00"; }
+
+    let timePart = homer.updated ? homer.updated.split('T')[1].slice(0, 8) : '--:--:--';
+
+    // ВЫВОД: Добавляем новые строки в контейнер
+    document.getElementById('competitionContainer5').innerHTML = `
+        <div style="font-size: 18px; font-family: '2';">
+            <div style="color: ${color};">${homer.name}: ${current} кубков<br>[${diff > 0 ? '+' : ''}${diff}] за сегодня</div>
+            <div style="color: ${colorWeek};">[${diffWeek > 0 ? '+' : ''}${diffWeek}] за неделю</div>
+            <div style="color: ${colorSeason};">[${diffSeason > 0 ? '+' : ''}${diffSeason}] за сезон</div>
+        </div>
+    `;
+    
+    // ЛОГИ: Оставляем как было, чтобы не спамить лишним
+    logshom.innerHTML += `[${timePart}] ${homer.name}: ${current} [${diff > 0 ? '+' : ''}${diff}]<br>`
+    lesa2()
+}
+
+async function lesa2() {
+    try {
+        // 1. Делаем запрос и ждем ответа
+        const response = await fetch(`http://192.168.1.65:5000/api/push/${homer.name}/🏆 ${homer.trophies} кубков`);
+        
+        // 2. Превращаем JSON из ответа в обычный объект JS
+        const data = await response.json();
+        
+        // 3. Теперь данные в переменной 'data'. Можно вывести их в консоль или на экран
+        console.log("Ответ от сервера:", data);
+        console.log("Статус:", data.status);
+        
+        // Пример: выведем текст из ответа прямо в блок "Работает?" на странице
+        // document.getElementById('status-text').innerText = data.received_content;
+
+    } catch (error) {
+        console.error("Произошла ошибка при запросе:", error);
+    }
+}
+
+function lesa3() {
+    // Точки отсчета
+    let startToday1 = 199000;
+    let startWeek1 = 195000;
+    let startSeason1 = 180000;
+
+    // Маленькая функция для знака + внутри основной
+    const fmt = (val) => (val >= 0 ? `+${val}` : val);
+
+    // Расчеты
+    let diffDay = fmt(homer.trophies - startToday1);
+    let diffWeek = fmt(homer.trophies - startWeek1);
+    let diffSeason = fmt(homer.trophies - startSeason1);
+
+    document.getElementById('competitionContainer1').innerHTML = `
+        <div style="color: #ffffff; font-size: 18px; font-family: '2';">
+            [${homer.name}]<br>
+            [${diffDay}] за сегодня<br>
+            [${diffWeek}] за неделю<br>
+            [${diffSeason}] за сезон
+        </div>`;
+}
+
+// Укажи точную дату окончания сезона
+const seasonEndDate = new Date("5 7, 2026 15:00:00").getTime();
+
+function updateSeasonTimer() {
+    const now = new Date().getTime();
+    const distance = seasonEndDate - now;
+
+    if (distance < 0) {
+        document.getElementById("seasonTimer").innerHTML = "СЕЗОН ЗАВЕРШЕН!";
+        return;
+    }
+
+    // Расчет времени
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    // Вывод в формате Д:Ч:М:С
+    document.getElementById("seasonTimer").innerHTML = 
+        `${days}д ${hours}ч ${minutes}м ${seconds}с`;
+}
+
+// Запуск каждую секунду
+setInterval(updateSeasonTimer, 1000);
+</script>
