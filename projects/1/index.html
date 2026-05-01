@@ -100,7 +100,12 @@
         <div class="stat-row">СКОРОСТЬ: <span class="stat-val"><span id="speed-display">0.0</span> КМ/Ч</span></div>
         <div class="stat-row">БОНУС: <span class="stat-val" id="walk-bonus">0.00</span></div>
         
-        <div id="goals-list"></div>
+        <div id="goals-list"></div><hr>
+        <div class="status-row">
+    Скорость: <span id="speed-display">0.0</span> км/ч
+    <br>
+    Позиция: <span id="coords-display">поиск...</span>
+</div><hr>
 
         <button id="access-btn" onclick="requestAccess()">ЗАПУСТИТЬ</button>
 
@@ -150,122 +155,154 @@ updateTop();
 </script>
 
 <script>
-        const goals = [
-        { id: "g0", title: "Цель дня", target: 1000, expired: "2026-05-02T00:00"}, // Изменил время
-        { id: "g1", title: "Приятные мелочи", target: 1, expired: "2026-06-21T00:00" },
-        { id: "g2", title: "Май '26", target: 200000, expired: "2026-06-01T00:00"},
-        { id: "g3", title: "Самый нежный вызов", target: 80000, expired: "2026-05-28T00:00" },
-        { id: "g4", title: "По-пингвиньи", target: 90000, expired: "2026-05-08T00:00"},
-        { id: "g5", title: "Хоровод народов", target: 1, expired: "2026-05-22T00:00"}
-    ];
+const goals = [
+    { id: "g0", title: "Цель дня", target: 1000, expired: "2026-05-02T00:00"},
+    { id: "g1", title: "Приятные мелочи", target: 1, expired: "2026-06-21T00:00" },
+    { id: "g2", title: "Май '26", target: 200000, expired: "2026-06-01T00:00"},
+    { id: "g3", title: "Самый нежный вызов", target: 80000, expired: "2026-05-28T00:00" },
+    { id: "g4", title: "По-пингвиньи", target: 90000, expired: "2026-05-08T00:00"},
+    { id: "g5", title: "Хоровод народов", target: 1, expired: "2026-05-22T00:00"}
+];
 
-    let savedData = JSON.parse(localStorage.getItem('tracker_data')) || { steps: 0, money: 0 };
-    let steps = savedData.steps;
-    let walkMoney = savedData.money;
-    let threshold = 9.5;
-    let isWaiting = false;
-    let lastSpeed = 0;
+let savedData = JSON.parse(localStorage.getItem('tracker_data')) || { steps: 0, money: 0 };
+let steps = savedData.steps;
+let walkMoney = savedData.money;
+let threshold = 9.5;
+let isWaiting = false;
+let lastSpeed = 0;
 
-    function renderUI() {
-        const list = document.getElementById('goals-list');
-        const now = new Date();
-        let html = '';
-        
-        goals.forEach(g => {
-            if (g.expired && new Date(g.expired) < now) return;
-
-            html += `
-                <div class="task-box">
-                    <div class="task-status">
-                        <span style="font-size: 13px">${g.title}</span>
-                        <span id="perc-${g.id}" style="font-size: 13px">0%</span>
-                    </div>
-                    <div class="progress-bg">
-                        <div id="txt-${g.id}" style="font-size: 13px" class="task-counter">[ 0 / ${g.target} ]</div>
-                        <div id="bar-${g.id}" style="font-size: 13px" class="progress-bar"></div>
-                    </div>
-                    <div id="timer-${g.id}" style="font-size: 13px" class="task-footer">0д 00ч 00м 00сек</div>
-                </div>`;
-        });
-        list.innerHTML = html;
-        saveAndRefresh();
-        setInterval(updateAllTimers, 1000);
-        updateAllTimers();
-    }
-
-    function updateAllTimers() {
-        const now = new Date().getTime();
-        goals.forEach(g => {
-            const timerEl = document.getElementById(`timer-${g.id}`);
-            if (!timerEl) return;
-            const dist = new Date(g.expired).getTime() - now;
-            if (dist < 0) { timerEl.innerHTML = "ЗАВЕРШЕНО"; return; }
-            const d = Math.floor(dist / (1000*60*60*24));
-            const h = Math.floor((dist % (1000*60*60*24)) / (1000*60*60));
-            const m = Math.floor((dist % (1000*60*60)) / (1000*60));
-            const s = Math.floor((dist % (1000*60)) / 1000);
-            timerEl.innerHTML = `${d}д ${h}ч ${m}м ${s}сек`;
-        });
-    }
-
-    function saveAndRefresh() {
-        localStorage.setItem('tracker_data', JSON.stringify({steps, money: walkMoney}));
-        document.getElementById('step-display').innerText = steps;
-        document.getElementById('walk-bonus').innerText = walkMoney.toFixed(2);
-        
-        goals.forEach(g => {
-            const bar = document.getElementById(`bar-${g.id}`);
-            const txt = document.getElementById(`txt-${g.id}`);
-            const perc = document.getElementById(`perc-${g.id}`);
-            if (!bar || !txt || !perc) return;
-
-            const level = Math.floor(steps / g.target);
-            const currentLevelSteps = steps % g.target;
-            const levelPercent = (currentLevelSteps / g.target * 100).toFixed(2);
-
-            bar.style.width = levelPercent + "%";
-            perc.innerText = level > 0 ? `УР. ${level} (${levelPercent}%)` : `${levelPercent} %`;
-            txt.innerText = `[ ${Math.floor(currentLevelSteps)} / ${g.target} ]`;
-            bar.style.background = level >= 1 ? "#999900" : "#007bff";
-            if(level >= 1) perc.style.color = "#00ff00";
-        });
-    }
-
-    function requestAccess() {
-        if (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === 'function') {
-            DeviceMotionEvent.requestPermission().then(res => { if(res == 'granted') startAll(); });
-        } else { startAll(); }
-        document.getElementById('access-btn').innerText = "ONLINE";
-        document.getElementById('access-btn').disabled = true;
-    }
-
-    function startAll() {
-        window.addEventListener('devicemotion', (e) => {
-            let acc = e.accelerationIncludingGravity;
-            if(!acc || !acc.y) return;
-            if (Math.abs(acc.y) > threshold && !isWaiting) {
-                steps++; walkMoney += 0.01;
-                saveAndRefresh();
-                if (navigator.vibrate) navigator.vibrate(30);
-                isWaiting = true; setTimeout(() => { isWaiting = false; }, 350); 
-            }
-        });
-        navigator.geolocation.watchPosition((pos) => {
-            let kmh = (pos.coords.speed || 0) * 3.6;
-            let smooth = (kmh + lastSpeed) / 2;
-            lastSpeed = (kmh < 0.8) ? 0 : smooth;
-            document.getElementById('speed-display').innerText = lastSpeed.toFixed(1);
-        }, null, { enableHighAccuracy: true });
-    }
-
-    function exportData() { prompt("КОД:", btoa(JSON.stringify({steps, money: walkMoney}))); }
-    function importData() { 
-        let code = prompt("КОД:"); 
-        if(code) { try { let d = JSON.parse(atob(code)); steps = d.steps; walkMoney = d.money; saveAndRefresh(); } catch(e){}} 
-    }
-    function resetAll() { if(confirm("Сброс?")) { localStorage.clear(); location.reload(); } }
+function renderUI() {
+    const list = document.getElementById('goals-list');
+    const now = new Date();
+    let html = '';
     
-renderUI()
+    goals.forEach(g => {
+        if (g.expired && new Date(g.expired) < now) return;
+
+        html += `
+            <div class="task-box">
+                <div class="task-status">
+                    <span style="font-size: 13px">${g.title}</span>
+                    <span id="perc-${g.id}" style="font-size: 13px">0%</span>
+                </div>
+                <div class="progress-bg">
+                    <div id="txt-${g.id}" style="font-size: 13px" class="task-counter">[ 0 / ${g.target} ]</div>
+                    <div id="bar-${g.id}" style="font-size: 13px" class="progress-bar"></div>
+                </div>
+                <div id="timer-${g.id}" style="font-size: 13px" class="task-footer">0д 00ч 00м 00сек</div>
+            </div>`;
+    });
+    list.innerHTML = html;
+    saveAndRefresh();
+    setInterval(updateAllTimers, 1000);
+    updateAllTimers();
+}
+
+function updateAllTimers() {
+    const now = new Date().getTime();
+    goals.forEach(g => {
+        const timerEl = document.getElementById(`timer-${g.id}`);
+        if (!timerEl) return;
+        const dist = new Date(g.expired).getTime() - now;
+        if (dist < 0) { timerEl.innerHTML = "ЗАВЕРШЕНО"; return; }
+        const d = Math.floor(dist / (1000*60*60*24));
+        const h = Math.floor((dist % (1000*60*60*24)) / (1000*60*60));
+        const m = Math.floor((dist % (1000*60*60)) / (1000*60));
+        const s = Math.floor((dist % (1000*60)) / 1000);
+        timerEl.innerHTML = `${d}д ${h}ч ${m}м ${s}сек`;
+    });
+}
+
+function saveAndRefresh() {
+    localStorage.setItem('tracker_data', JSON.stringify({steps, money: walkMoney}));
+    
+    // Обновляем базовые показатели
+    if(document.getElementById('step-display')) document.getElementById('step-display').innerText = steps;
+    if(document.getElementById('walk-bonus')) document.getElementById('walk-bonus').innerText = walkMoney.toFixed(2);
+    
+    goals.forEach(g => {
+        const bar = document.getElementById(`bar-${g.id}`);
+        const txt = document.getElementById(`txt-${g.id}`);
+        const perc = document.getElementById(`perc-${g.id}`);
+        if (!bar || !txt || !perc) return;
+
+        const level = Math.floor(steps / g.target);
+        const currentLevelSteps = steps % g.target;
+        const levelPercent = (currentLevelSteps / g.target * 100).toFixed(2);
+
+        bar.style.width = levelPercent + "%";
+        perc.innerText = level > 0 ? `УР. ${level} (${levelPercent}%)` : `${levelPercent} %`;
+        txt.innerText = `[ ${Math.floor(currentLevelSteps)} / ${g.target} ]`;
+        bar.style.background = level >= 1 ? "#999900" : "#007bff";
+        if(level >= 1) perc.style.color = "#00ff00";
+    });
+}
+
+function requestAccess() {
+    // Для iOS и новых Android требуется жест пользователя
+    if (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === 'function') {
+        DeviceMotionEvent.requestPermission()
+            .then(res => { if(res == 'granted') startAll(); })
+            .catch(e => console.error(e));
+    } else { 
+        startAll(); 
+    }
+    const btn = document.getElementById('access-btn');
+    if(btn) {
+        btn.innerText = "ONLINE";
+        btn.disabled = true;
+    }
+}
+
+function startAll() {
+    // 1. Акселерометр (Шаги)
+    window.addEventListener('devicemotion', (e) => {
+        let acc = e.accelerationIncludingGravity;
+        if(!acc || !acc.y) return;
+        if (Math.abs(acc.y) > threshold && !isWaiting) {
+            steps++; 
+            walkMoney += 0.01;
+            saveAndRefresh();
+            if (navigator.vibrate) navigator.vibrate(30);
+            isWaiting = true; 
+            setTimeout(() => { isWaiting = false; }, 350); 
+        }
+    });
+
+    // 2. Геолокация (Скорость + Координаты в реальном времени)
+    navigator.geolocation.watchPosition((pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        const speedKmh = (pos.coords.speed || 0) * 3.6;
+
+        // Плавное обновление скорости
+        let smooth = (speedKmh + lastSpeed) / 2;
+        lastSpeed = (speedKmh < 0.8) ? 0 : smooth;
+
+        // Вывод на экран
+        const speedEl = document.getElementById('speed-display');
+        const coordsEl = document.getElementById('coords-display'); // Добавьте этот ID в HTML
+
+        if(speedEl) speedEl.innerText = lastSpeed.toFixed(1);
+        if(coordsEl) coordsEl.innerText = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+        
+    }, (err) => {
+        console.warn("GPS Error:", err.message);
+    }, { 
+        enableHighAccuracy: true,
+        maximumAge: 0 
+    });
+}
+
+function exportData() { prompt("КОД:", btoa(JSON.stringify({steps, money: walkMoney}))); }
+function importData() { 
+    let code = prompt("КОД:"); 
+    if(code) { try { let d = JSON.parse(atob(code)); steps = d.steps; walkMoney = d.money; saveAndRefresh(); } catch(e){ alert("Ошибка кода"); }} 
+}
+function resetAll() { if(confirm("Сбросить весь прогресс?")) { localStorage.clear(); location.reload(); } }
+
+// Инициализация при загрузке
+renderUI();
 </script>
 </body>
 </html>
