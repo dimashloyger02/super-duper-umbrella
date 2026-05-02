@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.000, maximum-scale=1.000, user-scalable=no, shrink-to-fit=no">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="utf-8">
+    <style>
+        /* ТВОИ ШРИФТЫ */
+        @font-face { font-family: '1'; src: url('https://brawltytlol.vercel.app/css/progresspixel8bit.ttf'); }
+        @font-face { font-family: '2'; src: url('https://brawltytlol.vercel.app/css/progresspixel8bitpab.ttf'); }
+        @font-face { font-family: '3'; src: url('https://brawltytlol.vercel.app/css/DOSFont.ttf'); }
+
+        body {
+            background: #000000;
+            color: #ffffff;
+            font-family: '1';
+            text-align: center;
+            padding: 20px;
+        }
+
+        .header-title {
+            font-size: 26px;
+            color: orange;
+            margin: 20px 0;
+            text-transform: uppercase;
+        }
+
+        #seasonTimer {
+            font-family: '3';
+            font-size: 22px;
+            color: #00ffff;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* ТАБЛИЦА В ТВОЕМ СТИЛЕ */
+        .player-table {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 20px auto;
+            border-collapse: collapse;
+            font-family: '2';
+        }
+
+        .player-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ffffff;
+            font-size: 16px;
+        }
+
+        button {
+            font-family: '1';
+            background: orange;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        button:active { background: #cc8400; }
+
+        .logs {
+            font-family: '3';
+            font-size: 12px;
+            color: #666;
+            text-align: left;
+            max-width: 500px;
+            margin: 20px auto;
+            border-top: 1px dashed #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-title">Brawl Push 200K Tracker</div>
+    
+    <div id="seasonTimer">00д 00ч 00м 00с</div>
+
+    <!-- Контейнер для Холдика -->
+    <table class="player-table">
+        <tr>
+            <td id="playerslo1">Ожидание данных Holdik...</td>
+            <td style="width: 100px; text-align: center;">
+                <button onclick="member('lo1')" style="margin:0;">UP</button>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Контейнер для Бессмертного -->
+    <table class="player-table">
+        <tr>
+            <td id="playerslo2">Ожидание данных Bezsmertny...</td>
+            <td style="width: 100px; text-align: center;">
+                <button onclick="member('lo2')" style="margin:0;">UP</button>
+            </td>
+        </tr>
+    </table>
+
+    <div id="logshom" class="logs"></div>
+
+<script>
+// 1. ДАННЫЕ (Твой массив)
+const players = [
+    { id: "lo1", namer: "Holdik", tag: "80RCCGQL", depDay: 199016, depWeek: 199016, depSeason: 199016 },
+    { id: "lo2", namer: "Bezsmertny", tag: "ULQY2U8U", depDay: 200019, depWeek: 198000, depSeason: 192000 }
+];
+
+let homer = { trophies: 0, name: 'No name', updated: '' };
+
+// 2. ЦВЕТОВАЯ ЛОГИКА
+function getColor(diff, threshold) {
+    if (diff < 0) return "#ff0000"; 
+    if (diff >= threshold) return "#00ff00"; 
+    if (diff > 0) return "#ffff00"; 
+    return "#ffffff";
+}
+
+// 3. ОБНОВЛЕНИЕ ВРЕМЕНИ
+function lesa1() {
+    let dol1 = new Date();
+    homer.updated = `${dol1.toLocaleDateString()}T${dol1.toLocaleTimeString()}.000000`;
+}
+
+// 4. ГЛАВНАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ
+async function member(playerId) {
+    const p = players.find(item => item.id === playerId);
+    if (!p) return;
+
+    lesa1();
+    await loadStats(p.tag); // Твоя внешняя функция API
+    
+    let current = homer.trophies;
+    let dDay = current - p.depDay;
+    let dWeek = current - p.depWeek;
+    let dSeason = current - p.depSeason;
+
+    let timePart = homer.updated.split('T')[1].slice(0, 8);
+
+    // Вывод в HTML
+    document.getElementById(`players${p.id}`).innerHTML = `
+        <div style="font-size: 18px;">
+            <b>${p.namer}</b>: ${current} 🏆<br>
+            <span style="color: ${getColor(dDay, 100)};">День: [${dDay > 0 ? '+' : ''}${dDay}]</span><br>
+            <span style="color: ${getColor(dWeek, 700)};">Неделя: [${dWeek > 0 ? '+' : ''}${dWeek}]</span><br>
+            <span style="color: ${getColor(dSeason, 1000)};">Сезон: [${dSeason > 0 ? '+' : ''}${dSeason}]</span>
+        </div>
+    `;
+
+    // Логирование
+    document.getElementById('logshom').innerHTML += `[${timePart}] ${p.namer}: ${current} (${dDay > 0 ? '+' : ''}${dDay})<br>`;
+    lesa2()
+    }
+
+// 5. ТАЙМЕР СЕЗОНА
+const seasonEndDate = new Date("May 7, 2026 15:00:00").getTime();
+setInterval(function updateSeasonTimer() {
+    const now = new Date().getTime();
+    const distance = seasonEndDate - now;
+    if (distance < 0) {
+        document.getElementById("seasonTimer").innerHTML = "СЕЗОН ЗАВЕРШЕН!";
+        return;
+    }
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    document.getElementById("seasonTimer").innerHTML = `${days}д ${hours}ч ${minutes}м ${seconds}с`;
+}, 1000);
+
+async function loadStats(playerTag) {
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/api/player/${playerTag}`);
+        
+        // 1. Если Flask вообще выключен (Ошибка 404 или нет связи)
+        if (!response.ok) {
+            console.error(`Сервер недоступен: ${response.status}`);
+            return { error: "Flask отключен" }; 
+        }
+        
+        const homs = await response.json();
+
+        // 2. Если Flask работает, но API Brawl Stars выдало ошибку (Техперерыв)
+        if (homs.error) {
+            console.warn(`Проблема с API для ${playerTag}:`, homs.error);
+            // Возвращаем объект с ошибкой, чтобы основной код знал, что рисовать красный блок
+            return homs; 
+        }
+        
+        // 3. Если всё отлично — сохраняем в homer
+        console.log('Данные получены:', homs);
+        homer = homs;
+        return homs;
+        
+    } catch (error) {
+        // Если вообще нет интернета или Flask «упал»
+        console.error(`Критическая ошибка для тега ${playerTag}:`, error);
+        return { error: "Ошибка сети или Flask" };
+    }
+}
+
+async function lesa2() {
+    try {
+        // 1. Делаем запрос и ждем ответа
+        const response = await fetch(`http://192.168.1.65:5000/api/push/${homer.name}/🏆 ${homer.trophies} кубков`);
+        
+        // 2. Превращаем JSON из ответа в обычный объект JS
+        const data = await response.json();
+        
+        // 3. Теперь данные в переменной 'data'. Можно вывести их в консоль или на экран
+        console.log("Ответ от сервера:", data);
+        console.log("Статус:", data.status);
+        
+        // Пример: выведем текст из ответа прямо в блок "Работает?" на странице
+        // document.getElementById('status-text').innerText = data.received_content;
+
+    } catch (error) {
+        console.error("Произошла ошибка при запросе:", error);
+    }
+}
+</script>
+</body>
+</html>
