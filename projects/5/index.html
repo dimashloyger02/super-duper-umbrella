@@ -196,7 +196,7 @@ async function loadStats(playerTag) {
 async function lesa2() {
     try {
         // 1. Делаем запрос и ждем ответа
-        const response = await fetch(`http://127.0.0.1:5000/api/push/${homer.name}/🏆 ${homer.trophies} кубков`);
+        const response = await fetch(`http://192.168.1.65:5000/api/push/${homer.name}/🏆 ${homer.trophies} кубков`);
         
         // 2. Превращаем JSON из ответа в обычный объект JS
         const data = await response.json();
