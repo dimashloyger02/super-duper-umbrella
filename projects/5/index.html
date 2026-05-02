@@ -69,6 +69,33 @@
             margin: 20px auto;
             border-top: 1px dashed #333;
         }
+        
+        .brawl-friend-row {
+    background: linear-gradient(180deg, #2a4bb7 0%, #1a338d 100%); /* Синий градиент как в игре */
+    border: 2px solid #000;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+    margin-bottom: 5px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.player-icon-stub {
+    width: 40px;
+    height: 40px;
+    background: #555;
+    border: 2px solid #fff;
+    margin-right: 15px;
+}
+
+.friend-info { display: flex; align-items: center; text-align: left; }
+.player-name { font-family: '2'; font-size: 18px; color: #fff; text-shadow: 1px 1px #000; }
+.player-stats-sub { font-size: 12px; color: #ccc; margin-top: 4px; }
+.up-button { background: #ffcc00; border: 2px solid #000; font-family: '1'; padding: 5px 10px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -215,19 +242,23 @@ async function lesa2() {
 
 // Поставь этот вызов в самый конец скрипта или после объявления массива players
 function renderPlayers() {
-    const container = document.getElementById('mainContainer'); // Создай этот div в HTML
-    container.innerHTML = ''; // Очищаем перед отрисовкой
+    const container = document.getElementById('mainContainer');
+    container.innerHTML = ''; 
 
     players.forEach(p => {
         container.innerHTML += `
-            <table class="player-table">
-                <tr>
-                    <td id="players${p.id}">Ожидание данных ${p.namer}...</td>
-                    <td style="width: 100px; text-align: center;">
-                        <button onclick="member('${p.id}')" style="margin:0;">UP</button>
-                    </td>
-                </tr>
-            </table>
+            <div class="brawl-friend-row" id="row${p.id}">
+                <div class="friend-info">
+                    <div class="player-icon-stub"></div> <!-- Место для иконки -->
+                    <div class="player-name-block">
+                        <span class="player-name">${p.namer}</span>
+                        <div class="player-stats-sub" id="players${p.id}">Нажмите UP для загрузки...</div>
+                    </div>
+                </div>
+                <div class="friend-actions">
+                    <button class="up-button" onclick="member('${p.id}')">UP</button>
+                </div>
+            </div>
         `;
     });
 }
