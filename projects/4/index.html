@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Ultimate Level Tracker v5.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <style>
+        @font-face {
+    font-family: '1';
+    src: url('https://brawltytlol.vercel.app/css/progresspixel8bit.ttf');
+}
+@font-face {
+    font-family: '2';
+    src: url('https://brawltytlol.vercel.app/css/progresspixel8bitpab.ttf');
+}
+@font-face {
+    font-family: '3';
+    src: url('https://brawltytlol.vercel.app/css/DOSFont.ttf');
+}
+@font-face {
+    font-family: '4';
+    src: url('https://brawltytlol.vercel.app/css/ABFlockHeadline-Regular.ttf');
+}
+@font-face {
+    font-family: '5';
+    src: url('https://brawltytlol.vercel.app/css/Rubik-Regular.ttf');
+}
+        @font-face {
+            font-family: '6';
+            src: url('https://forumstatic.ru/files/001a/a3/94/73088.ttf?v=1');
+        }
+
+        body { 
+            background: #000; 
+            color: #fff; 
+            font-family: '2', sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 15px; 
+            margin: 0; 
+            min-height: 100vh;
+        }
+        
+        #main-container { 
+            border: 4px solid #ffff00; 
+            width: 400px; 
+            max-width: 95%;
+            background: #000; 
+            color: #ffff00; 
+            padding: 15px; 
+            box-sizing: border-box; 
+            margin-top: 10px; 
+        }
+
+        #topers-container {
+            width: 400px;
+            max-width: 95%;
+            margin-top: 20px;
+            border: 2px dashed #555;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        
+        .toper-item {
+            font-family: '2';
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-row { margin-bottom: 8px; font-family: '1'; font-size: 14px; }
+        .stat-val { color: #fff; float: right; font-family: '2'; }
+        .status-row { font-family: '1'; font-size: 12px; color: #888; margin: 10px 0; line-height: 1.5; }
+
+        button { width: 100%; padding: 12px; background: #222; color: #00ff00; border: 2px solid #00ff00; font-family: '2'; text-transform: uppercase; cursor: pointer; margin-top: 15px; }
+        .service-btns { display: flex; gap: 5px; margin-top: 10px; }
+        .btn-small { padding: 5px; font-size: 10px; border-color: #555; color: #aaa; width: 33%; margin-top: 0; }
+        
+        hr { border: 0; border-top: 1px solid #333; margin: 15px 0; }
+    </style>
+</head>
+<body>
+
+    <div id="main-container">
+        <div style="font-family: '2'; margin-bottom: 15px; text-align: center;">--- TRACKER v5.0 ---</div>
+        
+        <div class="stat-row">ШАГИ: <span class="stat-val" id="step-display">0</span></div>
+        <div class="stat-row">СКОРОСТЬ: <span class="stat-val"><span id="speed-display">0.0</span> КМ/Ч</span></div>
+        <div class="stat-row">БОНУС: <span class="stat-val" id="walk-bonus">0.00</span></div>
+        
+        <hr>
+        
+        <div class="status-row">
+            GPS ПРЯМОЙ ЭФИР:<br>
+            <span id="coords-display" style="color: #fff; font-family: '2'; font-size: 16px">ожидание спутников...</span>
+        </div>
+
+        <button id="access-btn" onclick="requestAccess()">ЗАПУСТИТЬ СИСТЕМУ</button>
+
+        <div class="service-btns">
+            <button class="btn-small" onclick="exportData()">БЭКАП</button>
+            <button class="btn-small" onclick="importData()">ВСТАВИТЬ</button>
+            <button class="btn-small" style="color:#ff3333" onclick="resetAll()">СБРОС</button>
+        </div>
+    </div>
+
+    <div id="topers-container">
+        <div style="text-align: center; font-size: 10px; color: #aaa; margin-bottom: 10px; font-family: '1';">ГЛОБАЛЬНЫЙ ТОП ПУША</div>
+        <div id="topers">
+            <div class="toper-item">Загрузка списка лидеров...</div>
+        </div>
+        <button class="btn-small" style="width: 100%; margin-top: 10px;" onclick="updateTop()">ОБНОВИТЬ ТОП</button>
+    </div>
+
+<script>
+    // 1. Инициализация данных
+    let savedData = JSON.parse(localStorage.getItem('tracker_data')) || { steps: 0, money: 0 };
+    let steps = savedData.steps;
+    let walkMoney = savedData.money;
+    let lastSpeed = 0;
+    let isWaiting = false;
+    const threshold = 9.5;
+    let cachedPlayers = []; // Сюда загрузим ботов один раз
+
+    // 2. Обновление интерфейса
+    function saveAndRefresh() {
+        localStorage.setItem('tracker_data', JSON.stringify({steps, money: walkMoney}));
+        document.getElementById('step-display').innerText = steps;
+        document.getElementById('walk-bonus').innerText = walkMoney.toFixed(2);
+        updateTop()
+    }
+
+    // 3. Доступ к сенсорам
+    function requestAccess() {
+        if (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === 'function') {
+            DeviceMotionEvent.requestPermission()
+                .then(res => { if(res == 'granted') startSensors(); })
+                .catch(e => console.error(e));
+        } else { 
+            startSensors(); 
+        }
+        
+        const btn = document.getElementById('access-btn');
+        btn.innerText = "СИСТЕМА ONLINE";
+        btn.disabled = true;
+        btn.style.borderColor = "#555";
+        btn.style.color = "#555";
+    }
+
+    function startSensors() {
+        // Шагомер
+        window.addEventListener('devicemotion', (e) => {
+            let acc = e.accelerationIncludingGravity;
+            if(!acc || !acc.y) return;
+            
+            if (Math.abs(acc.y) > threshold && !isWaiting) {
+                steps++; 
+                walkMoney += 0.01;
+                saveAndRefresh();
+                if (navigator.vibrate) navigator.vibrate(30);
+                isWaiting = true; 
+                setTimeout(() => { isWaiting = false; }, 350); 
+            }
+        });
+
+        // GPS (Скорость + Координаты)
+        navigator.geolocation.watchPosition((pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            const speedKmh = (pos.coords.speed || 0) * 3.6;
+
+            let smooth = (speedKmh + lastSpeed) / 2;
+            lastSpeed = (speedKmh < 0.8) ? 0 : smooth;
+
+            document.getElementById('speed-display').innerText = lastSpeed.toFixed(1);
+            document.getElementById('coords-display').innerText = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+        }, null, { enableHighAccuracy: true });
+    }
+
+    // 4. Сервисные функции
+    function exportData() {
+        const code = btoa(JSON.stringify({steps, money: walkMoney}));
+        prompt("ВАШ КОД БЭКАПА (СКОПИРУЙТЕ):", code);
+    }
+
+    function importData() {
+        let code = prompt("ВСТАВЬТЕ КОД БЭКАПА:"); 
+        if(code) { 
+            try { 
+                let d = JSON.parse(atob(code)); 
+                steps = d.steps || 0; 
+                walkMoney = d.money || 0; 
+                saveAndRefresh(); 
+                alert("Данные успешно загружены!");
+            } catch(e) { alert("Ошибка: неверный формат кода"); } 
+        } 
+    }
+
+    function resetAll() {
+        if(confirm("ВНИМАНИЕ: Сбросить весь текущий прогресс?")) {
+            localStorage.removeItem('tracker_data');
+            steps = 0;
+            walkMoney = 0;
+            saveAndRefresh();
+        }
+    }
+
+// Функция 1: Загрузка из сети (срабатывает только при старте)
+async function updateTop1() {
+    try {
+        const res = await fetch('https://brawltytlol.vercel.app/projects/top.js');
+        const data = await res.json();
+        cachedPlayers = data.players; // Сохраняем ботов
+        console.log("Боты загружены");
+        updateTop(); // Сразу рисуем топ
+    } catch(e) {
+        console.error("Ошибка сети при загрузке ботов");
+        // Если инета нет, можно подставить пустой массив или стандартных ботов
+        cachedPlayers = [{"name": "Бот 1", "steps": 500}, {"name": "Ты", "steps": 0}];
+        updateTop();
+    }
+}
+
+// Функция 2: Отрисовка (срабатывает при каждом шаге или нажатии кнопки)
+function updateTop() {
+    const topContainer = document.getElementById('topers');
+    if (!topContainer || cachedPlayers.length === 0) return;
+
+    // 1. Берем ботов из памяти и подставляем твои живые шаги
+    let playerList = cachedPlayers.map(p => {
+        if (p.name === "Ты") return { ...p, steps: steps };
+        return p;
+    });
+
+    // 2. Сортируем (боты — это и есть цели, которых надо обогнать)
+    playerList.sort((a, b) => b.steps - a.steps);
+
+    // 3. Рисуем
+    let html = '';
+    playerList.forEach((p, index) => {
+        const color = (p.name === "Ты") ? "color:#ffff00; font-weight:bold;" : "";
+        html += `
+            <div class="toper-item" style="${color}">
+                <span>${index + 1}. ${p.name}</span>
+                <span>${p.steps}</span>
+            </div>`;
+    });
+    
+    topContainer.innerHTML = html;
+}
+
+    // Старт
+    saveAndRefresh();
+    updateTop1();
+</script>
+
+</body>
+</html>
