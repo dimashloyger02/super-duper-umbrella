@@ -74,30 +74,14 @@
 <body>
 
     <div class="header-title">Brawl Push 200K Tracker</div>
-    
-    <div id="seasonTimer">00д 00ч 00м 00с</div>
+<div id="seasonTimer">00д 00ч 00м 00с</div>
+<hr>
 
-    <!-- Контейнер для Холдика -->
-    <table class="player-table">
-        <tr>
-            <td id="playerslo1">Ожидание данных Holdik...</td>
-            <td style="width: 100px; text-align: center;">
-                <button onclick="member('lo1')" style="margin:0;">UP</button>
-            </td>
-        </tr>
-    </table>
+<!-- Сюда функция сама вставит все таблицы -->
+<div id="mainContainer"></div>
 
-    <!-- Контейнер для Бессмертного -->
-    <table class="player-table">
-        <tr>
-            <td id="playerslo2">Ожидание данных Bezsmertny...</td>
-            <td style="width: 100px; text-align: center;">
-                <button onclick="member('lo2')" style="margin:0;">UP</button>
-            </td>
-        </tr>
-    </table>
-
-    <div id="logshom" class="logs"></div>
+<h3>Логи:</h3>
+<div id="logshom" class="logs"></div>
 
 <script>
 // 1. ДАННЫЕ (Твой массив)
@@ -229,6 +213,29 @@ async function lesa2() {
         console.error("Произошла ошибка при запросе:", error);
     }
 }
+
+// Поставь этот вызов в самый конец скрипта или после объявления массива players
+function renderPlayers() {
+    const container = document.getElementById('mainContainer'); // Создай этот div в HTML
+    container.innerHTML = ''; // Очищаем перед отрисовкой
+
+    players.forEach(p => {
+        container.innerHTML += `
+            <table class="player-table">
+                <tr>
+                    <td id="players${p.id}">Ожидание данных ${p.namer}...</td>
+                    <td style="width: 100px; text-align: center;">
+                        <button onclick="member('${p.id}')" style="margin:0;">UP</button>
+                    </td>
+                </tr>
+            </table>
+        `;
+    });
+}
+
+// Запускаем отрисовку при загрузке страницы
+renderPlayers();
+    
 </script>
 </body>
 </html>
