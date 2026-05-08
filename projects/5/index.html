@@ -112,8 +112,8 @@
 <script>
 // 1. ДАННЫЕ (Обновленный массив)
 const players = [
-    { id: "lo1", namer: "holdik", tag: "80RCCGQL", depDay: 200007, depWeek: 200007, depSeason: 200007 },
-    { id: "lo2", namer: "YT|BEZSMERTNY", tag: "ULQY2U8U", depDay: 199989, depWeek: 199989, depSeason: 199989 },
+    { id: "lo1", namer: "holdik", tag: "80RCCGQL", depDay: 200000, depWeek: 200007, depSeason: 200007 },
+    { id: "lo2", namer: "YT|BEZSMERTNY", tag: "ULQY2U8U", depDay: 199997, depWeek: 199989, depSeason: 199989 },
     { id: "lo3", namer: "Дима", tag: "29G9UY820", depDay: 36523, depWeek: 36523, depSeason: 36523 },
     { id: "lo4", namer: "Dexs23", tag: "YQ9G0QGUP", depDay: 20516, depWeek: 20516, depSeason: 20516 },
     { id: "lo5", namer: "Дмитрий", tag: "Q9C8C9YLY", depDay: 17340, depWeek: 17340, depSeason: 17340 },
@@ -125,8 +125,8 @@ const players = [
     { id: "lo11", namer: "Путь 100 призов", tag: "URVG2RPVP", depDay: 9159, depWeek: 9159, depSeason: 9159 },
     { id: "lo12", namer: "Gemstone", tag: "298GJRG29R", depDay: 7855, depWeek: 7855, depSeason: 7855 },
     { id: "lo13", namer: "Спринтер Финкс", tag: "2UCYLOYPQJ", depDay: 2353, depWeek: 2353, depSeason: 2353 },
-    { id: "lo14", namer: "гиадаркс", tag: "8GYRLPJ09", depDay: 77258, depWeek: 77258, depSeason: 77258 },
-    { id: "lo15", namer: "GiadarxMommy", tag: "LUJJ9UY8L", depDay: 60561, depWeek: 60561, depSeason: 60561 }
+    { id: "lo14", namer: "гиадаркс", tag: "8GYRLPJ09", depDay: 77737, depWeek: 77258, depSeason: 77258 },
+    { id: "lo15", namer: "GiadarxMommy", tag: "LUJJ9UY8L", depDay: 60705, depWeek: 60561, depSeason: 60561 }
 ];
     
 let homer = { trophies: 0, name: 'No name', updated: '' };
@@ -166,7 +166,7 @@ async function member(playerId) {
             <b>${p.namer}</b>: ${current} 🏆<br>
             <span style="color: ${getColor(dDay, 100)};">День: [${dDay > 0 ? '+' : ''}${dDay}]</span><br>
             <span style="color: ${getColor(dWeek, 700)};">Неделя: [${dWeek > 0 ? '+' : ''}${dWeek}]</span><br>
-            <span style="color: ${getColor(dSeason, 1000)};">Сезон: [${dSeason > 0 ? '+' : ''}${dSeason}]</span>
+            <span style="color: ${getColor(dSeason, 3000)};">Сезон: [${dSeason > 0 ? '+' : ''}${dSeason}]</span>
         </div>
     `;
 
