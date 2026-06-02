@@ -3,6 +3,10 @@
     {
       "source": "/tg-api/(.*)",
       "destination": "https://api.telegram.org/$1"
+    },
+    {
+      "source": "/api/core/(.*)",
+      "destination": "http://127.0.0.1:5000/bot/api/top"
     }
   ]
 }
