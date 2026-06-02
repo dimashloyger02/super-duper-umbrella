@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/tg-api/(.*)",
-      "destination": "https://telegram.org"
+      "destination": "https://**api.telegram.org**/$1"
     }
   ]
 }
