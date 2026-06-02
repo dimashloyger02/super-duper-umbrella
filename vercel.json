@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/tg-api/(.*)",
+      "destination": "https://telegram.org"
+    }
+  ]
+}
