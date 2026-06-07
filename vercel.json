@@ -6,7 +6,7 @@
     },
     {
       "source": "/youtube/(.*)",
-      "destination": "https://youtube.com/$1"
+      "destination": "https://m.youtube.com/$1"
     }
   ]
 }
