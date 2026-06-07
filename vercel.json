@@ -9,7 +9,7 @@
       "destination": "https://m.youtube.com/$1"
     },
     {
-      "source": "/tg-js-org/(.*)",
+      "source": "/tg-js-org.js",
       "destination": "https://telegram.org/js/telegram-widget.js?23"
     }
   ]
