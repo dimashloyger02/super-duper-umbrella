@@ -7,6 +7,10 @@
     {
       "source": "/youtube/(.*)",
       "destination": "https://m.youtube.com/$1"
+    },
+    {
+      "source": "/tg-js-org/(.*)",
+      "destination": "https://telegram.org/js/telegram-widget.js?23"
     }
   ]
 }
