@@ -59,10 +59,10 @@
             transition: all 0.5s;
         }
 </style>
-
+<div>Проверка Termux уведомления</div><br>
 <!-- Кнопки без лишнего JS-кода внутри -->
-<button onclick="changeAndReset(this, 'Лол'), toast1()">Активировать</button>
-<button onclick="changeAndReset(this, 'Булл'), toast1()">Активировать</button><hr>
+<button onclick="changeAndReset(this, 'Лол'), toast1()">toast</button>
+<button onclick="changeAndReset(this, 'Булл'), notify1()">notify</button><hr>
 <div id="server-response"></div>
 
 <script>
@@ -71,6 +71,16 @@ let tom = ""; // Или let tom = '';
 async function toast1(){
 const text1 = tom
 const proxyUrl = `http://127.0.0.1:5000/action/toast/${text1}`
+const response = await fetch(proxyUrl, {
+  method: 'GET'
+});
+const text = await response.text();
+window['server-response'].innerHTML = text
+}
+
+async function notify1(){
+const text1 = tom
+const proxyUrl = `http://127.0.0.1:5000/action/notify/${text1}`
 const response = await fetch(proxyUrl, {
   method: 'GET'
 });
