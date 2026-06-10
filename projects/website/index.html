@@ -31,7 +31,7 @@
         body {
             background: #000000;
             font-size: 18px;
-            color: #ffffff;
+            color: #0099ff;
             font-family: '1', monospace;
             padding: 3px;
             margin: 0;
@@ -58,19 +58,30 @@
             box-shadow: 0 0 15px #00FF00;
             transition: all 0.5s;
         }
+        pre{
+        font-family: '1', monospace;
+        }
 </style>
 <div>Проверка Termux уведомления</div><br>
 <!-- Кнопки без лишнего JS-кода внутри -->
-<button onclick="changeAndReset(this, 'Лол'), toast1()">toast</button>
-<button onclick="changeAndReset(this, 'Булл'), notify1()">notify</button><hr>
+<button onclick="changeAndReset(this, 'Лол'), toast1()">toast</button><button onclick="changeAndReset(this, 'Булл топ'), notify1()">notify</button><br><br>
 <div id="server-response"></div>
+<hr>
+<div>Кликер игра на Flask:</div><br>
+<div id="washing-clicker">Пусто...</div><br>
+<button onclick="lol1()">Клик</button><button onclick="sendProgressText()">Сохранить</button><br>
+<button onclick="datasto1()">Данные</button><button onclick="deleteProgressText()">Удалить</button><br>
+<button onclick="setuuld()">Установить</button>
 
 <script>
-let tom = ""; // Или let tom = '';
+let tom = "";
+let clicks = 0;
+let fusk = {};
+playerUuid = 1;
 
 async function toast1(){
 const text1 = tom
-const proxyUrl = `http://127.0.0.1:5000/action/toast/${text1}`
+const proxyUrl = `http://127.0.0.1:5000/action/toast/Набрано ${text1} кликов`
 const response = await fetch(proxyUrl, {
   method: 'GET'
 });
@@ -79,8 +90,9 @@ window['server-response'].innerHTML = text
 }
 
 async function notify1(){
+const text0 = `Кликер`
 const text1 = tom
-const proxyUrl = `http://127.0.0.1:5000/action/notify/${text1}`
+const proxyUrl = `http://127.0.0.1:5000/action/notify/${text0}/Набрано ${text1} кликов`
 const response = await fetch(proxyUrl, {
   method: 'GET'
 });
@@ -100,6 +112,63 @@ function changeAndReset(button, newText) {
     // 3. Через 3000 мс (3 секунды) возвращаем старый текст обратно
     setTimeout(() => {
         button.innerText = originalText;
+        lol1()
     }, 3000);
 }
+
+function lol1() {
+    clicks = clicks + 1;
+    tom = clicks;
+
+    // Собираем строку так, чтобы внутри неё не было экранированных слэшей
+    // Она сразу готова улететь на сервер как чистый текст
+    fusk = {"clicker":clicks,"clickerhex":clicks.toString(16),"ban":"Не обнаружено"};
+
+    window['washing-clicker'].innerHTML = clicks;
+}
+
+async function sendProgressText() {
+    const proxyUrl = 'http://127.0.0.1:5000/api/save/member/'+playerUuid;
+    
+    const response = await fetch(proxyUrl, {
+        method: 'POST',
+        // Передаем как обычный текст, чтобы Flask не ругался на отсутствие json-заголовков
+        headers: { 'Content-Type': 'text/plain' }, 
+        body: JSON.stringify(fusk) 
+    });
+    
+    const text = await response.text();
+    window['server-response'].innerHTML = text; // Выведет "Прогресс успешно сохранен на сервере!"
+}
+
+async function deleteProgressText() {
+    const proxyUrl = 'http://127.0.0.1:5000/api/save/member/'+playerUuid;
+    
+    const response = await fetch(proxyUrl, {
+        method: 'DELETE',
+        // Передаем как обычный текст, чтобы Flask не ругался на отсутствие json-заголовков
+        headers: { 'Content-Type': 'text/plain' }, 
+        body: JSON.stringify(fusk) 
+    });
+    
+    const text = await response.text();
+    window['server-response'].innerHTML = text; // Выведет "Прогресс успешно сохранен на сервере!"
+}
+
+async function datasto1(){
+const proxyUrl = `http://127.0.0.1:5000/action/get_text`
+const response = await fetch(proxyUrl, {
+  method: 'GET'
+});
+const text = await response.json();
+window['server-response'].innerHTML = `Данные:<pre>${JSON.stringify(text, null, 2)}</pre>`
+}
+
+function setuuld(){
+let ptoso = prompt(`Ой`, playerUuid)
+playerUuid = ptoso;
+}
+
+// Сразу загрузка скрипта
+lol1()
 </script>
