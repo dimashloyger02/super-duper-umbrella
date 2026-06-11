@@ -64,13 +64,13 @@
 </style>
 <div>Проверка Termux уведомления</div><br>
 <!-- Кнопки без лишнего JS-кода внутри -->
-<button onclick="changeAndReset(this, 'Лол'), toast1()">toast</button><button onclick="changeAndReset(this, 'Булл топ'), notify1()">notify</button><br><br>
+<button onclick="changeAndReset(this, ''), toast1()">toast</button><button onclick="changeAndReset(this, ''), notify1()">notify</button><br><br>
 <div id="server-response"></div>
 <hr>
 <div>Управление данными через Flask:</div><br>
-<div id="washing-clicker">Пусто...</div><br>
+<div style="width: 330px; height: 600px; background: #000000; color: #00FF00; border: 1px solid #00FF00; font-size: 21px; cursor: pointer; outline: none; box-shadow: 0 0 5px #00FF00; overflow-y: auto; font-family: '4', monospace; padding: 3px;" id="toptyt-clicker">1<hr style="color: #00FF00"></div><br>
 <button onclick="sendProgressText(), lol1()">Сохранить</button><button onclick="deleteProgressText(), lol1()">Удалить</button><br>
-<button style="width: 330px; height: 45px;" onclick="datasto1(), lol1()">Данные</button><br>
+<button style="width: 165px; height: 45px;" onclick="datasto1(), lol1()">Данные 1</button><button style="width: 165px; height: 45px;" onclick="datasto2(), lol1()">Данные 2</button><br>
 <button style="width: 330px; height: 45px;" onclick="setuuid(), lol1()">Установить UUID</button><br>
 <button style="width: 330px; height: 45px;" onclick="setnick(), lol1()">Установить ник</button><br>
 <button style="width: 330px; height: 45px;" onclick="setgems(), lol1()">Установить гемы</button><br>
@@ -79,7 +79,7 @@
 <button style="width: 330px; height: 45px;" onclick="setposition(), lol1()">Установить позицию</button><br>
 <button style="width: 330px; height: 45px;" onclick="setcolor(), lol1()">Установить цвет</button><br>
 <button style="width: 330px; height: 45px;" onclick="setdomain(), lol1()">Установить домен</button><br>
-<button style="width: 330px; height: 45px;" onclick="settime(), lol1()">Установить время</button><br>
+<button style="width: 330px; height: 45px;" onclick="settime(), lol1()">Установить время</button><br><hr>
 
 <script>
 let tom = "";
@@ -89,10 +89,11 @@ let position = 1;
 let nick = "";
 let gems = 0;
 let tg_stars = 0;
-let color = "#000000";
+let color = "#999999";
 let tg_id = "";
 let domain = "";
 let uptime = "";
+let globalplayersjson = {}
 
 async function toast1(){
 const text1 = tom
@@ -133,8 +134,7 @@ function changeAndReset(button, newText) {
 
 function lol1() {
     fusk = {"uuid":playerUuid,"position":position,"nick":nick,"gems":gems,"tg_stars":tg_stars,"color":color,"tg_id":tg_id,"domain":domain,"uptime":uptime};
-
-    window['washing-clicker'].innerHTML = `Ожидание команды...`;
+    
 }
 
 async function sendProgressText() {
@@ -171,7 +171,21 @@ const response = await fetch(proxyUrl, {
   method: 'GET'
 });
 const text = await response.json();
-window['server-response'].innerHTML = `Данные:<pre>${JSON.stringify(text, null, 2)}</pre>`
+globalplayersjson = text
+window['server-response'].innerHTML = `Данные:<pre style="width: 330px; height: 201px; background: #000000; color: #00FF00; border: 1px solid #00FF00; font-size: 12.96px; cursor: pointer; outline: none; box-shadow: 0 0 5px #00FF00; overflow-y: auto; font-family: '4', monospace; padding: 3px;">${JSON.stringify(text, null, 2)}</pre>`
+}
+
+async function datasto2(){
+console.log(globalplayersjson)
+
+// Пример того самого перебора, о котором вы говорили
+let htmlTop = "";
+Object.values(globalplayersjson).forEach(user => {
+    htmlTop += `<div style="color: ${user.color}">1</div>`;
+});
+// Запись готового топа в нижний блок
+window['toptyt-clicker'].innerHTML = htmlTop;
+
 }
 
 function setuuid() {
