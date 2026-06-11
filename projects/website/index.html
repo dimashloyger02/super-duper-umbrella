@@ -181,15 +181,10 @@ async function datasto2(){
     let htmlTop = "";
     Object.values(globalplayersjson).forEach(user => {
         htmlTop += `<div style="color: ${user.color}; border-bottom: 1px dashed #333; padding-bottom: 5px; margin-bottom: 5px;">
-            🌐 Домен: ${user.domain}<br>
-            💎 Гемы: ${user.gems}<br>
-            🐼 Ник: ${user.nick}<br>
-            🏆 Позиция: ${user.position}<br>
-            📱 TG ID: ${user.tg_id}<br>
-            ⭐ Stars: ${user.tg_stars}<br>
-            ⏰ Время: ${user.uptime}<br>
-            🆔 UUID: ${user.uuid}<br>
-            🎨 Цвет: ${user.color}
+#${user.position}. ${user.nick} [UUID: ${user.uuid}]<br>
+Гемы: ${user.gems} 💎<br>
+TG Stars: ${user.tg_stars} ⭐<br>
+Время: ${user.uptime} ⏰ <br>
         </div>`;
     });
 
