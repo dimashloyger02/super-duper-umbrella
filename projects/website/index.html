@@ -84,7 +84,16 @@
 <script>
 let tom = "";
 let fusk = {};
-let globalplayersjson = {}
+let globalplayersjson = {};
+let playerUuid = null;
+let gems = null;
+let tg_stars = null;
+let position = null;
+let nick = null
+let tg_id = null
+let color = null
+let domain = null
+let uptime = null
 
 function changeAndReset(button, newText) {
     // 1. Запоминаем исходный текст (например, "Активировать")
@@ -122,7 +131,14 @@ const text = await response.text();
 window['server-response'].innerHTML = text
 }
 
+function lol1(){
+fusk = {"uuid":playerUuid,"gems":gems,"tg_stars":tg_stars,"position":position,"nick":nick,"tg_id":tg_id,"color":color,"domain":domain,"uptime":uptime}
+
+console.log(fusk)
+}
+
 async function datasto1(){
+lol1()
 const proxyUrl = `http://127.0.0.1:5000/action/get_text`
 const response = await fetch(proxyUrl, {
   method: 'GET'
@@ -133,6 +149,7 @@ window['server-response'].innerHTML = `Данные:<pre style="width: 330px; he
 }
 
 async function datasto2(){
+lol1()
     console.log(globalplayersjson);
 
     let htmlTop = "";
@@ -176,58 +193,57 @@ async function deleteProgressText() {
     window['server-response'].innerHTML = text; // Выведет "Прогресс успешно сохранен на сервере!"
 }
 
-
 function setuuid() {
-let ptoso = prompt(`Установить UUID:`, `null`);
+let ptoso = prompt(`Установить UUID:`, `${playerUuid}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 playerUuid = parseInt(ptoso);
 }
 }
 
 function setgems() {
-let ptoso = prompt(`Установить гемы:`, `null`);
+let ptoso = prompt(`Установить гемы:`, `${gems}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 gems = parseInt(ptoso);
 }
 }
 
 function settgstars() {
-let ptoso = prompt(`Установить TG звезды:`, `null`);
+let ptoso = prompt(`Установить TG звезды:`, `${tg_stars}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 tg_stars = parseInt(ptoso);
 }
 }
 
 function setposition() {
-let ptoso = prompt(`Установить позицию:`, `null`);
+let ptoso = prompt(`Установить позицию:`, `${position}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 position = parseInt(ptoso);
 }
 }
 
 function setnick() {
-let ptoso = prompt(`Установить Никнейм:`, `null`);
+let ptoso = prompt(`Установить Никнейм:`, `${nick}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 nick = ptoso;
 }
 }
 
 function settgusername() {
-let ptoso = prompt(`Установить TG Username:`, `null`);
+let ptoso = prompt(`Установить TG Username:`, `${tg_id}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 tg_id = ptoso;
 }
 }
 
 function setcolor() {
-let ptoso = prompt(`Установить цвет:`, `null`);
+let ptoso = prompt(`Установить цвет:`, `${color}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 color = ptoso;
 }
 }
 
 function setdomain() {
-let ptoso = prompt(`Установить домен:`, `null`);
+let ptoso = prompt(`Установить домен:`, `${domain}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 domain = ptoso;
 }
@@ -242,7 +258,7 @@ function settime() {
     let localISOTime = (new Date(now.getTime() - tzOffset)).toISOString().substring(0, 19);
     
     // Теперь в prompt будет ваше точное местное время (например, 10:54, а не 03:54)
-    let ptoso = prompt(`Установить время (ISO формат):`, `null` || localISOTime);
+    let ptoso = prompt(`Установить время (ISO формат):`, `${localISOTime}` || localISOTime);
     if (ptoso !== null && ptoso.trim() !== "") {
         uptime = ptoso;
     }
