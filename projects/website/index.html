@@ -64,57 +64,27 @@
 </style>
 <div>Проверка Termux уведомления</div><br>
 <!-- Кнопки без лишнего JS-кода внутри -->
-<button onclick="changeAndReset(this, ''), toast1()">toast</button><button onclick="changeAndReset(this, ''), notify1()">notify</button><br><br>
+<button onclick="changeAndReset(this, '4'), toast1()">toast</button><button onclick="changeAndReset(this, '4'), notify1()">notify</button><br><br>
 <div id="server-response"></div>
 <hr>
 <div>Управление данными через Flask:</div><br>
 <div style="width: 330px; height: 600px; background: #000000; color: #00FF00; border: 1px solid #00FF00; font-size: 18px; cursor: pointer; outline: none; box-shadow: 0 0 5px #00FF00; overflow-y: auto; font-family: '4', monospace; padding: 3px;" id="toptyt-clicker">1<hr style="color: #00FF00"></div><br>
-<button onclick="sendProgressText(), lol1()">Сохранить</button><button onclick="deleteProgressText(), lol1()">Удалить</button><br>
-<button style="width: 165px; height: 45px;" onclick="datasto1(), lol1()">Данные 1</button><button style="width: 165px; height: 45px;" onclick="datasto2(), lol1()">Данные 2</button><br>
-<button style="width: 330px; height: 45px;" onclick="setuuid(), lol1()">Установить UUID</button><br>
-<button style="width: 330px; height: 45px;" onclick="setnick(), lol1()">Установить ник</button><br>
-<button style="width: 330px; height: 45px;" onclick="setgems(), lol1()">Установить гемы</button><br>
-<button style="width: 330px; height: 45px;" onclick="settgstars(), lol1()">Установить TG звезды</button><br>
-<button style="width: 330px; height: 45px;" onclick="settgusername(), lol1()">Установить TG Username</button><br>
-<button style="width: 330px; height: 45px;" onclick="setposition(), lol1()">Установить позицию</button><br>
-<button style="width: 330px; height: 45px;" onclick="setcolor(), lol1()">Установить цвет</button><br>
-<button style="width: 330px; height: 45px;" onclick="setdomain(), lol1()">Установить домен</button><br>
-<button style="width: 330px; height: 45px;" onclick="settime(), lol1()">Установить время</button><br><hr>
+<button onclick="datasto1()">Загрузить данные</button><button onclick="datasto2()">Загрузить топ</button><br>
+<button onclick="sendProgressText()">Сохранить</button><button onclick="deleteProgressText()">Удалить</button><br>
+<button style="width: 330px; height: 45px;" onclick="setuuid()">Установить UUID</button><br>
+<button style="width: 330px; height: 45px;" onclick="setnick()">Установить ник</button><br>
+<button style="width: 330px; height: 45px;" onclick="setgems()">Установить гемы</button><br>
+<button style="width: 330px; height: 45px;" onclick="settgstars()">Установить TG звезды</button><br>
+<button style="width: 330px; height: 45px;" onclick="settgusername()">Установить TG Username</button><br>
+<button style="width: 330px; height: 45px;" onclick="setposition()">Установить позицию</button><br>
+<button style="width: 330px; height: 45px;" onclick="setcolor()">Установить цвет</button><br>
+<button style="width: 330px; height: 45px;" onclick="setdomain()">Установить домен</button><br>
+<button style="width: 330px; height: 45px;" onclick="settime()">Установить время</button><br><hr>
 
 <script>
 let tom = "";
 let fusk = {};
-let playerUuid = 1;
-let position = 1;
-let nick = "";
-let gems = 0;
-let tg_stars = 0;
-let color = "#999999";
-let tg_id = "";
-let domain = "";
-let uptime = "";
 let globalplayersjson = {}
-
-async function toast1(){
-const text1 = tom
-const proxyUrl = `http://127.0.0.1:5000/action/toast/Набрано ${text1} кликов`
-const response = await fetch(proxyUrl, {
-  method: 'GET'
-});
-const text = await response.text();
-window['server-response'].innerHTML = text
-}
-
-async function notify1(){
-const text0 = `Кликер`
-const text1 = tom
-const proxyUrl = `http://127.0.0.1:5000/action/notify/${text0}/Набрано ${text1} кликов`
-const response = await fetch(proxyUrl, {
-  method: 'GET'
-});
-const text = await response.text();
-window['server-response'].innerHTML = text
-}
 
 function changeAndReset(button, newText) {
     // 1. Запоминаем исходный текст (например, "Активировать")
@@ -128,13 +98,54 @@ function changeAndReset(button, newText) {
     // 3. Через 3000 мс (3 секунды) возвращаем старый текст обратно
     setTimeout(() => {
         button.innerText = originalText;
-        lol1()
     }, 3000);
 }
 
-function lol1() {
-    fusk = {"uuid":playerUuid,"position":position,"nick":nick,"gems":gems,"tg_stars":tg_stars,"color":color,"tg_id":tg_id,"domain":domain,"uptime":uptime};
-    
+async function toast1(){
+const text1 = tom
+const proxyUrl = `http://127.0.0.1:5000/action/toast/${text1}`
+const response = await fetch(proxyUrl, {
+  method: 'GET'
+});
+const text = await response.text();
+window['server-response'].innerHTML = text
+}
+
+async function notify1(){
+const text0 = `Кликер`
+const text1 = tom
+const proxyUrl = `http://127.0.0.1:5000/action/notify/${text1}`
+const response = await fetch(proxyUrl, {
+  method: 'GET'
+});
+const text = await response.text();
+window['server-response'].innerHTML = text
+}
+
+async function datasto1(){
+const proxyUrl = `http://127.0.0.1:5000/action/get_text`
+const response = await fetch(proxyUrl, {
+  method: 'GET'
+});
+const text = await response.json();
+globalplayersjson = text
+window['server-response'].innerHTML = `Данные:<pre style="width: 330px; height: 201px; background: #000000; color: #00FF00; border: 1px solid #00FF00; font-size: 12.96px; cursor: pointer; outline: none; box-shadow: 0 0 5px #00FF00; overflow-y: auto; font-family: '4', monospace; padding: 3px;">${JSON.stringify(text, null, 2)}</pre>`
+}
+
+async function datasto2(){
+    console.log(globalplayersjson);
+
+    let htmlTop = "";
+    Object.values(globalplayersjson).forEach(user => {
+        htmlTop += `<div style="color: ${user.color}; border-bottom: 1px dashed #333; padding-bottom: 5px; margin-bottom: 5px;">
+#${user.position}. ${user.nick} [UUID: ${user.uuid}]<br>
+Гемы: ${user.gems} 💎<br>
+TG Stars: ${user.tg_stars} ⭐<br>
+Время: ${user.uptime} ⏰ <br>
+        </div>`;
+    });
+
+    window['toptyt-clicker'].innerHTML = htmlTop;
 }
 
 async function sendProgressText() {
@@ -165,83 +176,58 @@ async function deleteProgressText() {
     window['server-response'].innerHTML = text; // Выведет "Прогресс успешно сохранен на сервере!"
 }
 
-async function datasto1(){
-const proxyUrl = `http://127.0.0.1:5000/action/get_text`
-const response = await fetch(proxyUrl, {
-  method: 'GET'
-});
-const text = await response.json();
-globalplayersjson = text
-window['server-response'].innerHTML = `Данные:<pre style="width: 330px; height: 201px; background: #000000; color: #00FF00; border: 1px solid #00FF00; font-size: 12.96px; cursor: pointer; outline: none; box-shadow: 0 0 5px #00FF00; overflow-y: auto; font-family: '4', monospace; padding: 3px;">${JSON.stringify(text, null, 2)}</pre>`
-}
-
-async function datasto2(){
-    console.log(globalplayersjson);
-
-    let htmlTop = "";
-    Object.values(globalplayersjson).forEach(user => {
-        htmlTop += `<div style="color: ${user.color}; border-bottom: 1px dashed #333; padding-bottom: 5px; margin-bottom: 5px;">
-#${user.position}. ${user.nick} [UUID: ${user.uuid}]<br>
-Гемы: ${user.gems} 💎<br>
-TG Stars: ${user.tg_stars} ⭐<br>
-Время: ${user.uptime} ⏰ <br>
-        </div>`;
-    });
-
-    window['toptyt-clicker'].innerHTML = htmlTop;
-}
 
 function setuuid() {
-let ptoso = prompt(`Установить UUID:`, playerUuid);
+let ptoso = prompt(`Установить UUID:`, `null`);
 if (ptoso !== null && ptoso.trim() !== "") {
 playerUuid = parseInt(ptoso);
 }
 }
 
 function setgems() {
-let ptoso = prompt(`Установить гемы:`, gems);
+let ptoso = prompt(`Установить гемы:`, `null`);
 if (ptoso !== null && ptoso.trim() !== "") {
 gems = parseInt(ptoso);
 }
 }
 
 function settgstars() {
-let ptoso = prompt(`Установить TG звезды:`, tg_stars);
+let ptoso = prompt(`Установить TG звезды:`, `null`);
 if (ptoso !== null && ptoso.trim() !== "") {
 tg_stars = parseInt(ptoso);
 }
 }
 
 function setposition() {
-let ptoso = prompt(`Установить позицию:`, position);
+let ptoso = prompt(`Установить позицию:`, `null`);
 if (ptoso !== null && ptoso.trim() !== "") {
 position = parseInt(ptoso);
 }
 }
 
 function setnick() {
-let ptoso = prompt(`Установить Никнейм:`, nick);
+let ptoso = prompt(`Установить Никнейм:`, `null`);
 if (ptoso !== null && ptoso.trim() !== "") {
 nick = ptoso;
 }
 }
 
 function settgusername() {
-let ptoso = prompt(`Установить TG Username:`, tg_id);
+let ptoso = prompt(`Установить TG Username:`, `null`);
 if (ptoso !== null && ptoso.trim() !== "") {
 tg_id = ptoso;
 }
 }
 
 function setcolor() {
-let ptoso = prompt(`Установить цвет:`, color);
+let ptoso = prompt(`Установить цвет:`, `null`);
 if (ptoso !== null && ptoso.trim() !== "") {
 color = ptoso;
 }
 }
 
 function setdomain() {
-let ptoso = prompt(`Установить домен:`, domain);
+let ptoso = prompt(`Установить домен:`, `null`);
 if (ptoso !== null && ptoso.trim() !== "") {
 domain = ptoso;
 }
@@ -256,12 +242,12 @@ function settime() {
     let localISOTime = (new Date(now.getTime() - tzOffset)).toISOString().substring(0, 19);
     
     // Теперь в prompt будет ваше точное местное время (например, 10:54, а не 03:54)
-    let ptoso = prompt(`Установить время (ISO формат):`, uptime || localISOTime);
+    let ptoso = prompt(`Установить время (ISO формат):`, `null` || localISOTime);
     if (ptoso !== null && ptoso.trim() !== "") {
         uptime = ptoso;
     }
 }
 
+
 // Сразу загрузка скрипта
-lol1()
 </script>
