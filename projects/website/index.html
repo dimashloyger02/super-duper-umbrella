@@ -68,7 +68,7 @@
 <div id="server-response"></div>
 <hr>
 <div>Управление данными через Flask:</div><br>
-<div style="width: 330px; height: 600px; background: #000000; color: #00FF00; border: 1px solid #00FF00; font-size: 21px; cursor: pointer; outline: none; box-shadow: 0 0 5px #00FF00; overflow-y: auto; font-family: '4', monospace; padding: 3px;" id="toptyt-clicker">1<hr style="color: #00FF00"></div><br>
+<div style="width: 330px; height: 600px; background: #000000; color: #00FF00; border: 1px solid #00FF00; font-size: 18px; cursor: pointer; outline: none; box-shadow: 0 0 5px #00FF00; overflow-y: auto; font-family: '4', monospace; padding: 3px;" id="toptyt-clicker">1<hr style="color: #00FF00"></div><br>
 <button onclick="sendProgressText(), lol1()">Сохранить</button><button onclick="deleteProgressText(), lol1()">Удалить</button><br>
 <button style="width: 165px; height: 45px;" onclick="datasto1(), lol1()">Данные 1</button><button style="width: 165px; height: 45px;" onclick="datasto2(), lol1()">Данные 2</button><br>
 <button style="width: 330px; height: 45px;" onclick="setuuid(), lol1()">Установить UUID</button><br>
@@ -176,16 +176,24 @@ window['server-response'].innerHTML = `Данные:<pre style="width: 330px; he
 }
 
 async function datasto2(){
-console.log(globalplayersjson)
+    console.log(globalplayersjson);
 
-// Пример того самого перебора, о котором вы говорили
-let htmlTop = "";
-Object.values(globalplayersjson).forEach(user => {
-    htmlTop += `<div style="color: ${user.color}">1</div>`;
-});
-// Запись готового топа в нижний блок
-window['toptyt-clicker'].innerHTML = htmlTop;
+    let htmlTop = "";
+    Object.values(globalplayersjson).forEach(user => {
+        htmlTop += `<div style="color: ${user.color}; border-bottom: 1px dashed #333; padding-bottom: 5px; margin-bottom: 5px;">
+            🌐 Домен: ${user.domain}<br>
+            💎 Гемы: ${user.gems}<br>
+            🐼 Ник: ${user.nick}<br>
+            🏆 Позиция: ${user.position}<br>
+            📱 TG ID: ${user.tg_id}<br>
+            ⭐ Stars: ${user.tg_stars}<br>
+            ⏰ Время: ${user.uptime}<br>
+            🆔 UUID: ${user.uuid}<br>
+            🎨 Цвет: ${user.color}
+        </div>`;
+    });
 
+    window['toptyt-clicker'].innerHTML = htmlTop;
 }
 
 function setuuid() {
