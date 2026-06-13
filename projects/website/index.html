@@ -67,10 +67,13 @@
 <button onclick="changeAndReset(this, '4'), toast1()">toast</button><button onclick="changeAndReset(this, '4'), notify1()">notify</button><br><br>
 <div id="server-response"></div>
 <hr>
-<div>Управление данными через Flask:</div><br>
-<div style="width: 330px; height: 600px; background: #000000; color: #00FF00; border: 1px solid #00FF00; font-size: 18px; cursor: pointer; outline: none; box-shadow: 0 0 5px #00FF00; overflow-y: auto; font-family: '4', monospace; padding: 3px;" id="toptyt-clicker">1<hr style="color: #00FF00"></div><br>
+<div>Топ проекта игроков:</div><br>
+<div style="width: 330px; height: 600px; background: #000000; color: #00FF00; border: 1px solid #00FF00; font-size: 18px; cursor: pointer; outline: none; box-shadow: 0 0 5px #00FF00; overflow-y: auto; font-family: '4', monospace; padding: 3px;" id="toptyt-clicker"></div><br>
+<div>Мониторинг проекта:</div><br>
+<div style="width: 330px; height: 210px; background: #000000; color: #00FF00; border: 1px solid #00FF00; font-size: 18px; cursor: pointer; outline: none; box-shadow: 0 0 5px #00FF00; overflow-y: auto; font-family: '4', monospace; padding: 3px;" id="monitor-clicker"></div><br>
 <button onclick="datasto1()">Загрузить данные</button><button onclick="datasto2()">Загрузить топ</button><br>
 <button onclick="sendProgressText()">Сохранить</button><button onclick="deleteProgressText()">Удалить</button><br>
+<button style="width: 330px; height: 45px;" onclick="getProgressText()">Загрузить игрока</button><br>
 <button style="width: 330px; height: 45px;" onclick="setuuid()">Установить UUID</button><br>
 <button style="width: 330px; height: 45px;" onclick="setnick()">Установить ник</button><br>
 <button style="width: 330px; height: 45px;" onclick="setgems()">Установить гемы</button><br>
@@ -79,21 +82,31 @@
 <button style="width: 330px; height: 45px;" onclick="setposition()">Установить позицию</button><br>
 <button style="width: 330px; height: 45px;" onclick="setcolor()">Установить цвет</button><br>
 <button style="width: 330px; height: 45px;" onclick="setdomain()">Установить домен</button><br>
-<button style="width: 330px; height: 45px;" onclick="settime()">Установить время</button><br><hr>
+<button style="width: 330px; height: 45px;" onclick="settime()">Установить время</button><br>
+<button style="width: 330px; height: 45px;" onclick="getMonitoringText()">Получить мониторинг</button><br>
+<button style="width: 330px; height: 45px;" onclick="puss1()">Отправить сообщение</button><button style="width: 330px; height: 45px;" onclick="puss2(213)">Изменить сообщение</button><br>
 
 <script>
 let tom = "";
 let fusk = {};
 let globalplayersjson = {};
-let playerUuid = null;
-let gems = null;
-let tg_stars = null;
-let position = null;
-let nick = null
-let tg_id = null
-let color = null
-let domain = null
-let uptime = null
+let playerUuid = 0;
+let gems = 0;
+let clovers = 0;
+let dollars = 0;
+let tg_stars = 0;
+let position = 1;
+let nick = null;
+let tg_id = null;
+let color = null;
+let domain = null;
+let uptime = null;
+let totals = {}
+let total_player = 0;
+let total_gem = 0;
+let total_star = 0;
+let total_clover = 0;
+let total_dollar = 0;
 
 function changeAndReset(button, newText) {
     // 1. Запоминаем исходный текст (например, "Активировать")
@@ -131,14 +144,7 @@ const text = await response.text();
 window['server-response'].innerHTML = text
 }
 
-function lol1(){
-fusk = {"uuid":playerUuid,"gems":gems,"tg_stars":tg_stars,"position":position,"nick":nick,"tg_id":tg_id,"color":color,"domain":domain,"uptime":uptime}
-
-console.log(fusk)
-}
-
 async function datasto1(){
-lol1()
 const proxyUrl = `http://127.0.0.1:5000/action/get_text`
 const response = await fetch(proxyUrl, {
   method: 'GET'
@@ -149,7 +155,6 @@ window['server-response'].innerHTML = `Данные:<pre style="width: 330px; he
 }
 
 async function datasto2(){
-lol1()
     console.log(globalplayersjson);
 
     let htmlTop = "";
@@ -162,11 +167,42 @@ TG Stars: ${user.tg_stars} ⭐<br>
         </div>`;
     });
 
-    window['toptyt-clicker'].innerHTML = htmlTop;
+window['toptyt-clicker'].innerHTML = htmlTop;
+}
+
+function lol1(){
+fusk = {"uuid":playerUuid,"gems":gems,"tg_stars":tg_stars,"position":position,"nick":nick,"tg_id":tg_id,"color":color,"domain":domain,"uptime":uptime,"clovers":clovers,"dollars":dollars}
+}
+
+function lol2(){
+totals = {"total_players":total_player,"total_gems": total_gem,"total_stars":total_star,"total_clovers": total_clover,"total_dollars":total_dollar}
+}
+
+async function getProgressText() {
+    const proxyUrl = 'http://127.0.0.1:5000/api/member/'+playerUuid;
+    
+    const response = await fetch(proxyUrl, {
+        method: 'GET',
+        // Передаем как обычный текст, чтобы Flask не ругался на отсутствие json-заголовков
+        headers: { 'Content-Type': 'text/plain' }
+    });
+    
+     textjson = await response.json();
+playerUuid = textjson.uuid || 0;
+gems = textjson.gems || 0;
+tg_stars = textjson.tg_stars || 0;
+position = textjson.position || 1;
+nick = textjson.nick || `Unknown`;
+tg_id = textjson.tg_id || `Unknown`;
+color = textjson.color || `#999999`;
+domain = textjson.domain || `Unknown`;
+uptime = textjson.uptime || `Unknown`;
+clovers = textjson.clovers || 0;
+dollars = textjson.dollars || 0;
+fusk = {"uuid":playerUuid,"gems":gems,"tg_stars":tg_stars,"position":position,"nick":nick,"tg_id":tg_id,"color":color,"domain":domain,"uptime":uptime,"clovers":clovers,"dollars":dollars}
 }
 
 async function sendProgressText() {
-lol1()
     const proxyUrl = 'http://127.0.0.1:5000/api/save/member/'+playerUuid;
     
     const response = await fetch(proxyUrl, {
@@ -177,11 +213,9 @@ lol1()
     });
     
     const text = await response.text();
-    window['server-response'].innerHTML = text; // Выведет "Прогресс успешно сохранен на сервере!"
 }
 
 async function deleteProgressText() {
-lol1()
     const proxyUrl = 'http://127.0.0.1:5000/api/save/member/'+playerUuid;
     
     const response = await fetch(proxyUrl, {
@@ -192,13 +226,44 @@ lol1()
     });
     
     const text = await response.text();
-    window['server-response'].innerHTML = text; // Выведет "Прогресс успешно сохранен на сервере!"
+}
+
+async function getMonitoringText() {
+    const proxyUrl = 'http://127.0.0.1:5000/api/monitoring/totals'
+    
+    const response = await fetch(proxyUrl, {
+        method: 'GET',
+        // Передаем как обычный текст, чтобы Flask не ругался на отсутствие json-заголовков
+        headers: { 'Content-Type': 'text/plain' }
+    });
+    
+     textjsons = await response.json();
+total_player = textjsons.total_players || 0;
+total_gem = textjsons.total_gems || 0;
+total_star = textjsons.total_stars || 0;
+total_clover = textjsons.total_clovers || 0;
+total_dollar = textjsons.total_dollars || 0;
+totals = {"total_players":total_player,"total_gems": total_gem,"total_stars":total_star,"total_clovers": total_clover,"total_dollars":total_dollar}
+
+    console.log(textjsons)
+    console.log(totals)
+    
+window['monitor-clicker'].innerHTML = `📊 Мониторинг проекта
+<hr>
+👤 Игроки: <tg-math>${total_player}</tg-math><br>
+💎 Гемы: <tg-math>${total_gem}</tg-math><br>
+⭐ Звезды: <tg-math>${total_star}</tg-math><br>
+🍀 Клеверы: <tg-math>${total_clover}</tg-math><br>
+💲 Доллары: <tg-math>${total_dollar}</tg-math>
+<hr>
+<i>📡 Обновлено из кода на лету!</i>`;
 }
 
 function setuuid() {
 let ptoso = prompt(`Установить UUID:`, `${playerUuid}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 playerUuid = parseInt(ptoso);
+lol1()
 }
 }
 
@@ -206,6 +271,7 @@ function setgems() {
 let ptoso = prompt(`Установить гемы:`, `${gems}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 gems = parseInt(ptoso);
+lol1()
 }
 }
 
@@ -213,6 +279,7 @@ function settgstars() {
 let ptoso = prompt(`Установить TG звезды:`, `${tg_stars}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 tg_stars = parseInt(ptoso);
+lol1()
 }
 }
 
@@ -220,6 +287,7 @@ function setposition() {
 let ptoso = prompt(`Установить позицию:`, `${position}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 position = parseInt(ptoso);
+lol1()
 }
 }
 
@@ -227,6 +295,7 @@ function setnick() {
 let ptoso = prompt(`Установить Никнейм:`, `${nick}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 nick = ptoso;
+lol1()
 }
 }
 
@@ -234,6 +303,7 @@ function settgusername() {
 let ptoso = prompt(`Установить TG Username:`, `${tg_id}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 tg_id = ptoso;
+lol1()
 }
 }
 
@@ -241,6 +311,7 @@ function setcolor() {
 let ptoso = prompt(`Установить цвет:`, `${color}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 color = ptoso;
+lol1()
 }
 }
 
@@ -248,6 +319,7 @@ function setdomain() {
 let ptoso = prompt(`Установить домен:`, `${domain}`);
 if (ptoso !== null && ptoso.trim() !== "") {
 domain = ptoso;
+lol1()
 }
 }
 
@@ -263,9 +335,417 @@ function settime() {
     let ptoso = prompt(`Установить время (ISO формат):`, `${localISOTime}` || localISOTime);
     if (ptoso !== null && ptoso.trim() !== "") {
         uptime = ptoso;
+        lol1()
     }
 }
 
+const token = '8880091197:AAF74dJTIzZVtY7a4Jq30iybiLaKM92kkIo';
+const CHAT_ID = 1763784339; // ID лички (для канала замените на -100...)
+
+// 1. ОТПРАВКА СООБЩЕНИЯ ИЗ КОДА
+function puss1() {
+  const proxyUrl = `https://brawltytlol.vercel.app/tg-api/bot${token}/sendRichMessage`;
+
+  fetch(proxyUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: CHAT_ID,
+      rich_message: {
+        "html": `<b>🚀 ЗАПУСК МОНИТОРИНГА</b>\n` +
+                `——————\n` +
+                `Ожидание обновления...`
+      }
+    })
+  })
+  .then(res => res.json())
+  .then(data => console.log('Создано! ID:', data.result?.message_id))
+  .catch(err => console.error('Ошибка puss1:', err));
+}
+
+// 2. РЕДАКТИРОВАНИЕ СООБЩЕНИЯ ИЗ КОДА
+function puss2(messageId) {
+  const proxyUrl = `https://brawltytlol.vercel.app/tg-api/bot${token}/editMessageText`;
+
+  // Тестовые числовые значения для ваших 5 меток
+  const players = totals.total_players;
+  const gems = totals.total_gems;
+  const stars = totals.total_stars;
+  const clovers = totals.total_clovers;
+  const dollars = totals.total_dollars;
+
+  // Собираем чистый Rich HTML лонгрид по правилам API 10.1
+  const htmlContent = 
+`<h1>📊 Мониторинг проекта</h1>
+<hr>
+👤 Игроки: <tg-math>${players}</tg-math><br>
+💎 Гемы: <tg-math>${gems}</tg-math><br>
+⭐ Звезды: <tg-math>${stars}</tg-math><br>
+🍀 Клеверы: <tg-math>${clovers}</tg-math><br>
+💲 Доллары: <tg-math>${dollars}</tg-math>
+<hr>
+<i>📡 Обновлено из кода на лету!</i>`;
+
+  fetch(proxyUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: CHAT_ID,
+      message_id: messageId,
+      rich_message: {
+        "html": htmlContent
+      }
+    })
+  })
+  .then(res => res.json())
+  .then(data => console.log('Результат редактирования:', data))
+  .catch(err => console.error('Ошибка puss2:', err));
+}
 
 // Сразу загрузка скрипта
+lol1(), lol2()
+
+secs = {
+  "ok": true,
+  "result": {
+    "message_id": 12,
+    "sender_chat": {
+      "id": -1003904711720,
+      "title": "Vercel Project от Dimashloyger02",
+      "type": "channel"
+    },
+    "chat": {
+      "id": -1003904711720,
+      "title": "Vercel Project от Dimashloyger02",
+      "type": "channel"
+    },
+    "date": 1781252818,
+    "reply_to_message": {
+      "message_id": 11,
+      "sender_chat": {
+        "id": -1003904711720,
+        "title": "Vercel Project от Dimashloyger02",
+        "type": "channel"
+      },
+      "chat": {
+        "id": -1003904711720,
+        "title": "Vercel Project от Dimashloyger02",
+        "type": "channel"
+      },
+      "date": 1781252741,
+      "edit_date": 1781252744,
+      "rich_message": {
+        "blocks": [
+          {
+            "type": "anchor",
+            "name": "top"
+          },
+          {
+            "type": "heading",
+            "text": "Structure",
+            "size": 1
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "heading",
+            "text": "Heading 1: Took a shrinking pill",
+            "size": 1
+          },
+          {
+            "type": "heading",
+            "text": "Heading 2: But it’s not working",
+            "size": 2
+          },
+          {
+            "type": "heading",
+            "text": "Heading 3: Because the world",
+            "size": 3
+          },
+          {
+            "type": "heading",
+            "text": "Heading 4: keeps getting bigger",
+            "size": 4
+          },
+          {
+            "type": "heading",
+            "text": "Heading 5: and bigger",
+            "size": 5
+          },
+          {
+            "type": "heading",
+            "text": "Heading 6: and bigger still",
+            "size": 6
+          },
+          {
+            "type": "paragraph",
+            "text": [
+              "Jump to ",
+              {
+                "type": "anchor_link",
+                "text": "lists",
+                "anchor_name": "lists"
+              },
+              " | ",
+              {
+                "type": "anchor_link",
+                "text": "details",
+                "anchor_name": "details"
+              },
+              " | ",
+              {
+                "type": "anchor_link",
+                "text": "top",
+                "anchor_name": "top"
+              }
+            ]
+          },
+          {
+            "type": "blockquote",
+            "blocks": [
+              {
+                "type": "paragraph",
+                "text": [
+                  "Single-line blockquote with ",
+                  {
+                    "type": "bold",
+                    "text": "formatting"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "blockquote",
+            "blocks": [
+              {
+                "type": "paragraph",
+                "text": [
+                  "Multi-line blockquotes for the yappers\nSecond line with ",
+                  {
+                    "type": "code",
+                    "text": "code"
+                  }
+                ]
+              },
+              {
+                "type": "paragraph",
+                "text": "Separate paragraph inside the quote"
+              }
+            ]
+          },
+          {
+            "type": "blockquote",
+            "blocks": [
+              {
+                "type": "paragraph",
+                "text": "Blockquote with nested blocks:"
+              },
+              {
+                "type": "list",
+                "items": [
+                  {
+                    "label": "•",
+                    "blocks": [
+                      {
+                        "type": "paragraph",
+                        "text": "A list inside"
+                      }
+                    ]
+                  },
+                  {
+                    "label": "•",
+                    "blocks": [
+                      {
+                        "type": "paragraph",
+                        "text": "Another item"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "blockquote",
+                "blocks": [
+                  {
+                    "type": "paragraph",
+                    "text": "Nested blockquote"
+                  }
+                ]
+              },
+              {
+                "type": "pre",
+                "text": "console.log(\"hello\");",
+                "language": "js"
+              }
+            ],
+            "credit": "Author Name"
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "anchor",
+            "name": "lists"
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "label": "•",
+                "blocks": [
+                  {
+                    "type": "paragraph",
+                    "text": "Unordered lists"
+                  }
+                ]
+              },
+              {
+                "label": "•",
+                "blocks": [
+                  {
+                    "type": "paragraph",
+                    "text": "for unordered thoughts"
+                  }
+                ]
+              },
+              {
+                "label": "•",
+                "blocks": [
+                  {
+                    "type": "paragraph",
+                    "text": "or whatever"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "label": "1.",
+                "blocks": [
+                  {
+                    "type": "paragraph",
+                    "text": "Ordered lists"
+                  }
+                ],
+                "type": "1",
+                "value": 1
+              },
+              {
+                "label": "2.",
+                "blocks": [
+                  {
+                    "type": "paragraph",
+                    "text": "to combat"
+                  }
+                ],
+                "type": "1",
+                "value": 2
+              },
+              {
+                "label": "3.",
+                "blocks": [
+                  {
+                    "type": "paragraph",
+                    "text": "Chaos"
+                  }
+                ],
+                "type": "1",
+                "value": 3
+              }
+            ]
+          },
+          {
+            "type": "list",
+            "items": [
+              {
+                "label": "•",
+                "blocks": [
+                  {
+                    "type": "paragraph",
+                    "text": "Checklists"
+                  }
+                ],
+                "has_checkbox": true
+              },
+              {
+                "label": "•",
+                "blocks": [
+                  {
+                    "type": "paragraph",
+                    "text": "with checks"
+                  }
+                ],
+                "has_checkbox": true,
+                "is_checked": true
+              }
+            ]
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "paragraph",
+            "text": [
+              "Inline anchor: ",
+              {
+                "type": "reference",
+                "text": "see note",
+                "name": "note1"
+              }
+            ]
+          },
+          {
+            "type": "anchor",
+            "name": "details"
+          },
+          {
+            "type": "details",
+            "summary": "Click to expand",
+            "blocks": [
+              {
+                "type": "paragraph",
+                "text": [
+                  "Hidden content with ",
+                  {
+                    "type": "bold",
+                    "text": "formatting"
+                  },
+                  "!"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "details",
+            "summary": "Nested details",
+            "blocks": [
+              {
+                "type": "details",
+                "summary": "Inner level",
+                "blocks": [
+                  {
+                    "type": "paragraph",
+                    "text": [
+                      "Deeply nested content with ",
+                      {
+                        "type": "code",
+                        "text": "code"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "text": "null"
+  }
+}
 </script>
