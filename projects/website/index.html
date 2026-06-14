@@ -368,11 +368,11 @@ function puss2(messageId) {
   const proxyUrl = `https://brawltytlol.vercel.app/tg-api/bot${token}/editMessageText`;
 
   // Тестовые числовые значения для ваших 5 меток
-  const players = totals.total_players;
-  const gems = totals.total_gems;
-  const stars = totals.total_stars;
-  const clovers = totals.total_clovers;
-  const dollars = totals.total_dollars;
+  const players = totals.total_players || 0;
+  const gems = totals.total_gems || 0;
+  const stars = totals.total_stars || 0;
+  const clovers = totals.total_clovers || 0;
+  const dollars = totals.total_dollars || 0;
 
   // Собираем чистый Rich HTML лонгрид по правилам API 10.1
   const htmlContent = 
