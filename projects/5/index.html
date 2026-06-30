@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Живой чат майнкрафта</title>
+<style>
+@font-face {
+    font-family: '1';
+    src: url('http://localhost:2435/storage/48EA-1506/Шрифты Progressbar95/chispix-bold.ttf');
+}
+@font-face {
+    font-family: '2';
+    src: url('http://localhost:2435/storage/48EA-1506/Шрифты Progressbar95/ComicBars.ttf');
+}
+/* Общие настройки экрана в стиле неоновой матрицы */
+body {
+    background: #000000;
+    font-size: 18px;
+    color: #ffffff;
+    font-family: '2', monospace;
+    padding: 15px;
+    margin: 0;
+}
+
+/* Твои фирменные неоновые кнопки */
+button {
+    height: 45px;
+    background: #000000;
+    color: #00FF00;
+    border: 1px solid #00FF00;
+    font-family: '1', monospace;
+    font-size: 18px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 0 5px #00FF00;
+    transition: all 60s;
+    margin-bottom: 8px;
+    width: 200px;
+    text-align: left;
+    padding-left: 10px;
+}
+
+button:active {
+    background: #ffffff;
+    color: #000;
+    box-shadow: 0 0 15px #00FF00;
+    transition: all 0.5s;
+}
+
+/* Стильная неоновая таблица в тон кнопкам */
+.table-box {
+    margin-top: 20px;
+    max-width: 350px;
+}
+.table-box h3 {
+    font-family: '1', monospace;
+    color: #00FF00;
+    margin-bottom: 10px;
+    text-shadow: 0 0 5px #00FF00;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #00FF00;
+    box-shadow: 0 0 5px #00FF00;
+    font-family: '2', monospace;
+}
+th, td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #00FF00;
+}
+th {
+    background: #0a0a0a;
+    color: #ffff00;
+}
+td.score {
+    color: #ffff00;
+}
+</style>
+</head>
+<body>
+
+Управление топом:<br><br>
+Сокет: <span id="sok"></span><br><br>
+<button onclick="sendCmd(`scoreboard objectives setdisplay sidebar top_ore`); changeTab('ore', 'Топ по руде')">Топ по руде</button>
+<button onclick="sendCmd(`scoreboard objectives setdisplay sidebar top_iron`); changeTab('iron', 'Топ по железу')">Топ по железу</button><br>
+<button onclick="sendCmd(`scoreboard objectives setdisplay sidebar top_gold`); changeTab('gold', 'Топ по золоту')">Топ по золоту</button>
+<button onclick="sendCmd(`scoreboard objectives setdisplay sidebar top_diamond`); changeTab('diamond', 'Топ по алмазам')">Топ по алмазам</button><br>
+
+<!-- Блок динамической таблицы топа -->
+<div class="table-box">
+    <h3 id="tableTitle">Топ по руде</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Никнейм</th>
+                <th>Штук</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <tr><td colspan="3" style="color: #555;">Ожидание подключения...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+let socket = new WebSocket("ws://" + (window.location.hostname || "127.0.0.1") + ":8000");
+
+let webstu = socket.url
+sok.innerHTML = webstu
+
+// Глобальные переменные для хранения данных
+let currentAllTopsData = null;
+let currentTab = 'ore'; 
+
+socket.onopen = function() { console.log("Успешно подключено к Node.js!"); };
+socket.onclose = function() { console.log("Успешно отключено от Node.js!"); };
+
+socket.onmessage = function(event) {
+    let minernum = JSON.parse(event.data);
+    console.log("Поймано событие:", minernum);
+    
+    // Проверяем: если прилетел пакет с файловыми топами
+    if (minernum.type === "all_tops_data") {
+        console.log("=== ДАННЫЕ ИЗ ФАЙЛОВ ОБНОВЛЕНЫ ===");
+        currentAllTopsData = minernum; // Записываем свежие данные в память
+        renderTable(); // Перерисовываем таблицу на экране
+    }
+};
+
+// Функция отрисовки таблицы из JSON-массива
+function renderTable() {
+    const tbody = document.getElementById('tableBody');
+    if (!currentAllTopsData) return;
+
+    // Вытаскиваем нужный массив данных (ore, iron, gold или diamond)
+    const activeArray = currentAllTopsData[currentTab] || [];
+    tbody.innerHTML = ''; // Чистим старые строки
+
+    if (activeArray.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="color:#555;">Пока нет данных</td></tr>';
+        return;
+    }
+
+    // Заполняем таблицу строками
+    activeArray.forEach((player, index) => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${player.name}</td>
+                <td class="score">${player.value}</td>
+            </tr>
+        `;
+    });
+}
+
+// Функция переключения вкладок топа при клике на кнопки
+function changeTab(tabName, titleText) {
+    currentTab = tabName;
+    document.getElementById('tableTitle').innerText = titleText;
+    renderTable(); // Мгновенно обновляем виджет
+}
+
+// Функция отправки команд
+function sendCmd(commandText) {
+    if (socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: 'run_command', command: commandText }));
+    }
+}
+</script>
+</body>
+</html>
