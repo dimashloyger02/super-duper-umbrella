@@ -7,17 +7,17 @@
 <style>
 @font-face {
     font-family: '1';
-    src: url('https://brawltytlol.vercel.app/css/chispix-bold.ttf');
+    src: url('http://localhost:2435/storage/48EA-1506/Шрифты Progressbar95/chispix-bold.ttf');
 }
 @font-face {
     font-family: '2';
-    src: url('https://brawltytlol.vercel.app/css/ComicBars.ttf');
+    src: url('http://localhost:2435/storage/48EA-1506/Шрифты Progressbar95/ComicBars.ttf');
 }
 /* Общие настройки экрана в стиле неоновой матрицы */
 body {
-    font-size: 14px;
     background: #000000;
-    color: #999999;
+    font-size: 18px;
+    color: #ffffff;
     font-family: '2', monospace;
     padding: 15px;
     margin: 0;
@@ -30,7 +30,7 @@ button {
     color: #00FF00;
     border: 1px solid #00FF00;
     font-family: '1', monospace;
-    font-size: 14px;
+    font-size: 18px;
     cursor: pointer;
     outline: none;
     box-shadow: 0 0 5px #00FF00;
@@ -88,6 +88,10 @@ td.score {
 <button onclick="sendCmd(`scoreboard objectives setdisplay sidebar top_iron`); changeTab('iron', 'Топ по железу')">Топ по железу</button><br>
 <button onclick="sendCmd(`scoreboard objectives setdisplay sidebar top_gold`); changeTab('gold', 'Топ по золоту')">Топ по золоту</button>
 <button onclick="sendCmd(`scoreboard objectives setdisplay sidebar top_diamond`); changeTab('diamond', 'Топ по алмазам')">Топ по алмазам</button><br>
+
+<button onclick="shareBrawlToTitle('29G9UY820', '@a')">Title: Инфо Димы</button>
+<button onclick="spawnBrawlHologram('29G9UY820', '@a')">Title: Инфо Димы</button>
+
 
 <!-- Блок динамической таблицы топа -->
 <div class="table-box">
@@ -170,9 +174,46 @@ function sendCmd(commandText) {
         socket.send(JSON.stringify({ type: 'run_command', command: commandText }));
     }
 }
-</script>
 
-<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>eruda.init();</script>
+async function shareBrawlToTitle(playerTag, mcNickname = "@a") {
+    try {
+        const response = await fetch(`http://127.0.0.1:5000/api/player/${playerTag}/text`);
+        const fullText = await response.text();
+        const lines = fullText.split('\n');
+        
+        const titleLine = lines[0];
+        const subtitleLines = lines.slice(1).join('\n'); 
+
+        sendCmd(`title ${mcNickname} times 10 70 10`);
+        sendCmd(`title ${mcNickname} subtitle ${subtitleLines}`);
+        sendCmd(`title ${mcNickname} title ${titleLine}`);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function spawnBrawlHologram(playerTag) {
+    try {
+        // 1. Забираем готовый текст с Flask
+        const response = await fetch(`http://127.0.0.1:5000/api/player/${playerTag}/text`);
+        const fullText = await response.text();
+        
+        // Очищаем текст от возможных лишних пробелов по краям
+        const formattedText = fullText.trim();
+
+        // 2. Сначала удаляем старый стенд в радиусе 10 блоков, чтобы они не копились
+        sendCmd(`kill @e[type=armor_stand,name="${formattedText.split('\n')[0]}"]`);
+
+        // 3. Спавним невидимый Armor Stand с именем в виде нашей статистики
+        // Он появится чуть выше уровня глаз игрока (~2 блока вверх)
+        sendCmd(`summon armor_stand ~ ~2 ~ "{CustomName:\\"${formattedText}\\",CustomNameVisible:1b,Invisible:1b,NoGravity:1b}"`);
+        
+        console.log("Парящая стенка успешно создана!");
+    } catch (error) {
+        console.error("Ошибка создания голограммы:", error);
+    }
+}
+
+</script>
 </body>
 </html>
