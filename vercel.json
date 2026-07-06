@@ -3,10 +3,6 @@
     {
       "source": "/tg-api/(.*)",
       "destination": "https://api.telegram.org/$1"
-    },
-    {
-      "source": "/vk-api/(.*)",
-      "destination": "https://api.vk.com/method/$1"
     }
   ]
 }
