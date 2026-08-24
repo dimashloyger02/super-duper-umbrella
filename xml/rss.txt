@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+    <!-- Метаданные самого сайта -->
+    <title>Название моего блога</title>
+    <link>https://example.com</link>
+    <description>Свежие статьи о технологиях</description>
+    <language>ru</language>
+
+    <!-- Первая новость -->
+    <item>
+        <title>Вышел новый гаджет 2026 года</title>
+        <link>https://example.com/gadget-2026</link>
+        <description>Краткий обзор главных функций новинки...</description>
+        <pubDate>Mon, 24 Aug 2026 12:00:00 +0300</pubDate>
+        <guid>https://example.com/gadget-2026</guid>
+    </item>
+
+    <!-- Вторая новость -->
+    <item>
+        <title>Как настроить RSS</title>
+        <link>https://example.com/how-to-rss</link>
+        <description>Пошаговое руководство для новичков.</description>
+        <pubDate>Sun, 23 Aug 2026 15:30:00 +0300</pubDate>
+        <guid>https://example.com/how-to-rss</guid>
+    </item>
+</channel>
+</rss>
