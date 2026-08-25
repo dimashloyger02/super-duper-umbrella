@@ -16,9 +16,12 @@
         <guid isPermaLink="false">id-1-1</guid> 
 
         <content:encoded><![CDATA[
-            <p style="color: #ff4757; font-weight: bold;">Это красный выделенный текст под первой картинкой.</p>
-            <br/>
-            <p style="color: #00ff00; font-weight: bold;">Это зеленый выделенный текст под первой картинкой.</p>
+            <span style="color: #ff4757; font-weight: bold;">Это красный выделенный текст под первой картинкой.</span>
+            <br>
+            <span style="color: #00ff00; font-weight: bold;">Это зеленый выделенный текст под первой картинкой.</span>
+            <br>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=7x7&margin=3&data=Просканируй меня!" style="width: 100px; height: 100px;">
+            <br>
         ]]></content:encoded>
     </item>
 </channel>
