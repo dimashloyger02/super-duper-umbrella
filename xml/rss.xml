@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- ИСПРАВЛЕНО: Вернули полный корректный адрес пространства имен -->
+<!-- ИСПРАВЛЕНО: Ссылка должна вести строго на /rss/1.0/modules/content/ -->
 <rss version="2.0" xmlns:content="http://purl.org">
 <channel>
     <title>Название моего блога</title>
@@ -16,8 +16,9 @@
         <guid isPermaLink="false">id-1-1</guid> 
 
         <content:encoded><![CDATA[
-<p style="color: #ff4757; font-weight: bold;">Это красный выделенный текст под первой картинкой.</p><br>
-<p style="color: #00ff00; font-weight: bold;">Это зеленый выделенный текст под первой картинкой.</p>
+            <p style="color: #ff4757; font-weight: bold;">Это красный выделенный текст под первой картинкой.</p>
+            <br/>
+            <p style="color: #00ff00; font-weight: bold;">Это зеленый выделенный текст под первой картинкой.</p>
         ]]></content:encoded>
     </item>
 </channel>
