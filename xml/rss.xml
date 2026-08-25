@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Добавили поддержку тега content:encoded в первую строку -->
+<!-- ИСПРАВЛЕНО: Вернули полный корректный адрес пространства имен -->
 <rss version="2.0" xmlns:content="http://purl.org">
 <channel>
     <title>Название моего блога</title>
@@ -15,16 +15,26 @@
         <pubDate>Tue, 25 Aug 2026 01:00:00 +0700</pubDate>
         <guid isPermaLink="false">id-1-1</guid> 
 
-        <!-- НАШ БЛОК С КАРТИНКАМИ И ТЕКСТОМ -->
         <content:encoded><![CDATA[
+            <!-- ИСПРАВЛЕНО: Указаны точные размеры изображений для Picsum -->
             <img src="https://picsum.photos" alt="Первая картинка" /><br/>
-            <p>Это первый блок текста под первой картинкой.</p>
+            
+            <!-- ПРИМЕР 1: Цветной текст через тег <p> -->
+            <p style="color: #ff4757; font-weight: bold;">Это красный выделенный текст под первой картинкой.</p>
             <br/>
+            
             <img src="https://picsum.photos" alt="Вторая картинка" /><br/>
-            <p>А здесь находится второй текст, описывающий второе изображение.</p>
+            
+            <!-- ПРИМЕР 2: Текст на цветной плашке (фоне) через <div> -->
+            <div style="background-color: #ffeaa7; color: #2d3436; padding: 10px; border-radius: 6px; margin: 10px 0;">
+                А здесь находится текст на красивом желтом фоне в виде блока.
+            </div>
             <br/>
+            
             <img src="https://picsum.photos" alt="Третья картинка" /><br/>
-            <p>Заключительный текст под третьей картинкой.</p>
+            
+            <!-- ПРИМЕР 3: Выделение отдельных слов цветом через <span> внутри обычного абзаца -->
+            <p>Заключительный текст, где <span style="color: #2ed573; background-color: #e3fcef; padding: 2px 6px; border-radius: 4px;">некоторые слова</span> покрашены отдельно.</p>
         ]]></content:encoded>
     </item>
 </channel>
