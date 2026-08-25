@@ -16,25 +16,8 @@
         <guid isPermaLink="false">id-1-1</guid> 
 
         <content:encoded><![CDATA[
-            <!-- ИСПРАВЛЕНО: Указаны точные размеры изображений для Picsum -->
-            <img src="https://picsum.photos" alt="Первая картинка" /><br/>
-            
-            <!-- ПРИМЕР 1: Цветной текст через тег <p> -->
-            <p style="color: #ff4757; font-weight: bold;">Это красный выделенный текст под первой картинкой.</p>
-            <br/>
-            
-            <img src="https://picsum.photos" alt="Вторая картинка" /><br/>
-            
-            <!-- ПРИМЕР 2: Текст на цветной плашке (фоне) через <div> -->
-            <div style="background-color: #ffeaa7; color: #2d3436; padding: 10px; border-radius: 6px; margin: 10px 0;">
-                А здесь находится текст на красивом желтом фоне в виде блока.
-            </div>
-            <br/>
-            
-            <img src="https://picsum.photos" alt="Третья картинка" /><br/>
-            
-            <!-- ПРИМЕР 3: Выделение отдельных слов цветом через <span> внутри обычного абзаца -->
-            <p>Заключительный текст, где <span style="color: #2ed573; background-color: #e3fcef; padding: 2px 6px; border-radius: 4px;">некоторые слова</span> покрашены отдельно.</p>
+<p style="color: #ff4757; font-weight: bold;">Это красный выделенный текст под первой картинкой.</p><br>
+<p style="color: #00ff00; font-weight: bold;">Это зеленый выделенный текст под первой картинкой.</p>
         ]]></content:encoded>
     </item>
 </channel>
