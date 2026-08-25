@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0">
+<!-- Добавили поддержку тега content:encoded в первую строку -->
+<rss version="2.0" xmlns:content="http://purl.org">
 <channel>
     <title>Название моего блога</title>
     <link>https://example.com</link>
@@ -9,12 +10,22 @@
     <!-- Первая новость -->
     <item>
         <title>Новость 1</title>
-        <link>https://example.com/</link>
+        <link>https://example.com</link>
         <description>Просто будть хорошим 🥰</description>
-        <!-- Исправлено: +0700 слитно без двоеточия -->
         <pubDate>Tue, 25 Aug 2026 01:00:00 +0700</pubDate>
-        <!-- Заменили ссылку на понятный уникальный ID -->
         <guid isPermaLink="false">id-1-1</guid> 
+
+        <!-- НАШ БЛОК С КАРТИНКАМИ И ТЕКСТОМ -->
+        <content:encoded><![CDATA[
+            <img src="https://picsum.photos" alt="Первая картинка" /><br/>
+            <p>Это первый блок текста под первой картинкой.</p>
+            <br/>
+            <img src="https://picsum.photos" alt="Вторая картинка" /><br/>
+            <p>А здесь находится второй текст, описывающий второе изображение.</p>
+            <br/>
+            <img src="https://picsum.photos" alt="Третья картинка" /><br/>
+            <p>Заключительный текст под третьей картинкой.</p>
+        ]]></content:encoded>
     </item>
 </channel>
 </rss>
