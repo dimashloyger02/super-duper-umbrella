@@ -24,5 +24,18 @@
             <br>
         ]]></content:encoded>
     </item>
+    
+    <!-- Вторая новость -->
+    <item>
+        <title>Новость 2</title>
+        <link>https://example.com</link>
+        <description>Просто будть хорошим 🥰</description>
+        <pubDate>Tue, 09 Seb 2026 06:00:00 +0700</pubDate>
+        <guid isPermaLink="false">id-1-1</guid> 
+
+        <content:encoded><![CDATA[
+            <span style="color: #ff4757; font-weight: bold;">К сожалению всё сломалось 😮‍💨</span>
+        ]]></content:encoded>
+    </item>
 </channel>
 </rss>
