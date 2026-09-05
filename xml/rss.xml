@@ -9,14 +9,7 @@
 
     <!-- Первая новость -->
     <item>
-        <title>Новость 1</title>
-        <link>https://example.com</link>
-        <description>Начало ленты</description>
-        <pubDate>Tue, 09 Sep 2026 14:00:00 +0700</pubDate>
-        <guid isPermaLink="false">id-1-1</guid>
-        <content:encoded><![CDATA[
-            <span style="color: #00ff00; font-weight: bold;">Теперь это чистая лента</span>
-        ]]></content:encoded>
+
     </item>
 </channel>
 </rss>
